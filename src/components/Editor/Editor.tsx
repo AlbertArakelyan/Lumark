@@ -1,13 +1,15 @@
 import {useEffect, useRef, useState} from 'react';
 import ReactMarkdown from 'react-markdown';
-import {EditorView} from '@codemirror/view';
+import {EditorView, } from '@codemirror/view';
 import {EditorState} from '@codemirror/state';
 import {markdown} from '@codemirror/lang-markdown';
 import {basicSetup} from 'codemirror';
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
-// import 'highlight.js/styles/github.css';
+import 'highlight.js/styles/github.css';
+import styles from './Editor.module.css';
+import 'github-markdown-css/github-markdown-light.css';
 
 const Editor = () => {
   const [content, setContent] = useState('');
@@ -45,19 +47,19 @@ const Editor = () => {
   }, []);
 
   return (
-    <div className="flex items-start justify-between gap-2 p-2">
-      <div className="w-1/2">
+    <div className={styles['editor']}>
+      <div className={styles['editor-container-wrapper']}>
         <div id="editor-container"></div>
       </div>
-      <div className="w-1/2">
-        <div className="prose prose-p:my-1 prose-li:my-1">
+      <div className={styles['markdown-body-wrapper']}>
+        <article className="markdown-body">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw, rehypeHighlight]}
           >
             {content}
           </ReactMarkdown>
-        </div>
+        </article>
       </div>
     </div>
   );

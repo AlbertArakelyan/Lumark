@@ -1,2 +1,6 @@
-@import "tailwindcss";
-@config "../../../tailwind.config.js";
+/*@import "tailwindcss";*/
+/*@config "../../../tailwind.config.js";*/
+
+html, body {
+  font-size: 16px;
+}
