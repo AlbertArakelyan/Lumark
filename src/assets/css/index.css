@@ -1,6 +1,16 @@
-/*@import "tailwindcss";*/
-/*@config "../../../tailwind.config.js";*/
+@import "tailwindcss";
+@config "../../../tailwind.config.js";
 
 html, body {
   font-size: 16px;
+}
+
+.markdown-body {
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
 }

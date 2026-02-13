@@ -8,7 +8,6 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 import 'highlight.js/styles/github.css';
-import styles from './Editor.module.css';
 import 'github-markdown-css/github-markdown-light.css';
 
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
@@ -51,11 +50,11 @@ const Editor = () => {
   }, []);
 
   return (
-    <div className={styles['editor']}>
-      <div className={styles['editor-container-wrapper']}>
+    <div className="flex items-start justify-between gap-2 p-2">
+      <div className="w-1/2">
         <div id="editor-container"></div>
       </div>
-      <div className={styles['markdown-body-wrapper']}>
+      <div className="w-1/2">
         <article className="markdown-body">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
