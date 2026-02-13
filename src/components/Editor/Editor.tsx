@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import ReactMarkdown from 'react-markdown';
-import {EditorView, } from '@codemirror/view';
+import {EditorView} from '@codemirror/view';
 import {EditorState} from '@codemirror/state';
 import {markdown} from '@codemirror/lang-markdown';
 import {basicSetup} from 'codemirror';
