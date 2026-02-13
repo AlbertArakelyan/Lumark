@@ -11,6 +11,10 @@ import 'highlight.js/styles/github.css';
 import styles from './Editor.module.css';
 import 'github-markdown-css/github-markdown-light.css';
 
+// Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
+// inside a new Editor.tsx (Editor2.tsx) component and compare
+// Consider last published 2 years ago, meanwhile code mirror is actively being updated
+
 const Editor = () => {
   const [content, setContent] = useState('');
   const editorRef = useRef<EditorView | null>(null);
