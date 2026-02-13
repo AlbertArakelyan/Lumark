@@ -1,12 +1,12 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import {EditorView} from '@codemirror/view';
-import {EditorState} from '@codemirror/state';
-import {markdown} from '@codemirror/lang-markdown';
-import {basicSetup} from 'codemirror';
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
-import rehypeHighlight from "rehype-highlight";
+import { EditorView } from '@codemirror/view';
+import { EditorState } from '@codemirror/state';
+import { markdown } from '@codemirror/lang-markdown';
+import { basicSetup } from 'codemirror';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 import 'github-markdown-css/github-markdown-light.css';
 
