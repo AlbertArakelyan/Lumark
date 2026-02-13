@@ -1,16 +1,9 @@
 @import "tailwindcss";
+
+@import "./lib/github-markdown.css";
+
 @config "../../../tailwind.config.js";
 
 html, body {
   font-size: 16px;
-}
-
-.markdown-body {
-  ul {
-    list-style-type: disc;
-  }
-
-  ol {
-    list-style-type: decimal;
-  }
 }
