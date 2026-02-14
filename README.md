@@ -12,6 +12,8 @@
   </p>
 </div>
 
+<img src="./public/lumark-screenshot.gif" alt="Lumark Screenshot" width="800px">
+
 ## Features
 
 - Amazing: Local-first, cross-platform, no data collection, split editor
