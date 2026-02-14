@@ -10,7 +10,7 @@ import rehypeHighlight from 'rehype-highlight';
 import { githubLight } from '@fsegurai/codemirror-theme-github-light'; // When dark theme is set up change with @fsegurai/codemirror-theme-github-dark
 import 'highlight.js/styles/github.css';
 import 'github-markdown-css/github-markdown-light.css';
-import { useAppContext } from '../../contexts/AppProvider.tsx';
+import { useAppContext } from '../contexts/AppProvider.tsx';
 
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
 // inside a new Editor.tsx (Editor2.tsx) component and compare

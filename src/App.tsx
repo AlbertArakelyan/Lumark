@@ -1,4 +1,4 @@
-import Editor from './components/Editor/Editor.tsx';
+import Editor from './components/Editor.tsx';
 
 const App = () => (
   <div>
