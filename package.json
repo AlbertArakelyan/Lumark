@@ -12,7 +12,10 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@codemirror/highlight": "^0.19.8",
     "@codemirror/lang-markdown": "^6.5.0",
+    "@fsegurai/codemirror-theme-github-dark": "^6.2.3",
+    "@fsegurai/codemirror-theme-github-light": "^6.2.3",
     "@tailwindcss/vite": "^4.1.18",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",

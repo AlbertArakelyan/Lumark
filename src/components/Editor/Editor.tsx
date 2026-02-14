@@ -7,8 +7,9 @@ import { basicSetup } from 'codemirror';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
+import { githubLight } from '@fsegurai/codemirror-theme-github-light'; // When dark theme is set up change with @fsegurai/codemirror-theme-github-dark
 import 'highlight.js/styles/github.css';
-import 'github-markdown-css/github-markdown-light.css'; // WHen dark theme is set up change with general github-markdown.css
+import 'github-markdown-css/github-markdown-light.css';
 
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
 // inside a new Editor.tsx (Editor2.tsx) component and compare
@@ -25,6 +26,7 @@ const Editor = () => {
         extensions: [
           basicSetup,
           markdown(),
+          githubLight,
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {
               setContent(update.state.doc.toString());
