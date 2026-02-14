@@ -8,11 +8,13 @@
     <img src="https://img.shields.io/github/license/AlbertArakelyan/lumark" alt="License">
   </div>
   <p>
-     Lightweight cross platform Markdown note-taking app
+     Lightweight cross-platform Markdown note-taking app
   </p>
 </div>
 
-<img src="./public/lumark-screenshot.gif" alt="Lumark Screenshot" width="800px">
+<div align="center">
+  <img src="./public/lumark-screenshot.gif" alt="Lumark Screenshot" width="800px">
+</div>
 
 ## Features
 
