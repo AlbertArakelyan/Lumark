@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/lumark-logo-original.png" alt="Lumark" width="138" height="138">
+  <img src="./public/lumark-logoOnly-original.png" alt="Lumark" width="138" height="138">
   <h1>Lumark</h1>
   <div align="center">
     <img src="https://img.shields.io/github/v/release/AlbertArakelyan/lumark" alt="GitHub release (latest by date)">
