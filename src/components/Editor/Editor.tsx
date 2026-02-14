@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { EditorView } from '@codemirror/view';
 import { EditorState } from '@codemirror/state';
@@ -18,12 +18,15 @@ import { useAppContext } from '../../contexts/AppProvider.tsx';
 
 const Editor = () => {
   const { content, setContent } = useAppContext();
+
+  const [isEditorContentSetInitially, setIsEditorContentSetInitially] = useState(false);
+
   const editorRef = useRef<EditorView | null>(null);
 
   useEffect(() => {
     if (!editorRef.current) {
       const startState = EditorState.create({
-        doc: '',
+        doc: content || '',
         extensions: [
           basicSetup,
           markdown(),
@@ -51,6 +54,20 @@ const Editor = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (editorRef.current && content && !isEditorContentSetInitially) {
+      editorRef.current.dispatch({
+        changes: {
+          from: 0,
+          to: editorRef.current.state.doc.length,
+          insert: content || '',
+        },
+      });
+
+      setIsEditorContentSetInitially(true);
+    }
+  }, [content, isEditorContentSetInitially]);
 
   return (
     <div className="flex items-start justify-between gap-2 p-2">
