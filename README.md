@@ -2,10 +2,10 @@
   <img src="./public/lumark-logoOnly-original.png" alt="Lumark" width="138" height="138">
   <h1>Lumark</h1>
   <div align="center">
-    <img src="https://img.shields.io/github/v/release/AlbertArakelyan/lumark" alt="GitHub release (latest by date)">
-    <img src="https://img.shields.io/badge/language-Rust | TypeScript-orange" alt="Language">
-    <img src="https://img.shields.io/badge/platforms-Windows,%20Mac%20OS,%20Linux%20(comming%20soon)-green" alt="Platforms">
-    <img src="https://img.shields.io/github/license/AlbertArakelyan/lumark" alt="License">
+    <img src="https://img.shields.io/github/v/release/AlbertArakelyan/lumark?style=flat-square" alt="GitHub release (latest by date)">
+    <img src="https://img.shields.io/badge/language-Rust | TypeScript-orange?style=flat-square" alt="Language">
+    <img src="https://img.shields.io/badge/platforms-Windows,%20Mac%20OS,%20Linux%20(comming%20soon)-green?style=flat-square" alt="Platforms">
+    <img src="https://img.shields.io/github/license/AlbertArakelyan/lumark?style=flat-square" alt="License">
   </div>
   <p>
      Lightweight cross-platform Markdown note-taking app
