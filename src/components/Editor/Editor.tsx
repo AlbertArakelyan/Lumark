@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { EditorView } from '@codemirror/view';
 import { EditorState } from '@codemirror/state';
@@ -10,13 +10,14 @@ import rehypeHighlight from 'rehype-highlight';
 import { githubLight } from '@fsegurai/codemirror-theme-github-light'; // When dark theme is set up change with @fsegurai/codemirror-theme-github-dark
 import 'highlight.js/styles/github.css';
 import 'github-markdown-css/github-markdown-light.css';
+import { useAppContext } from '../../contexts/AppProvider.tsx';
 
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
 // inside a new Editor.tsx (Editor2.tsx) component and compare
 // Consider last published 2 years ago, meanwhile code mirror is actively being updated
 
 const Editor = () => {
-  const [content, setContent] = useState('');
+  const { content, setContent } = useAppContext();
   const editorRef = useRef<EditorView | null>(null);
 
   useEffect(() => {
