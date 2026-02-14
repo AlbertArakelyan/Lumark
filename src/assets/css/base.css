@@ -1,0 +1,86 @@
+:root {
+  /* ===== Brand (shared) ===== */
+  --primary: #2f5bff;
+
+  --primary-50:  #eef2ff;
+  --primary-100: #dfe6ff;
+  --primary-200: #c7d2ff;
+  --primary-300: #a5b4ff;
+  --primary-400: #7c8cff;
+  --primary-500: #5468ff;
+  --primary-600: #3d53f6;
+  --primary-700: #2f5bff;
+  --primary-800: #243fd1;
+  --primary-900: #1b2ea3;
+
+  /* ===== Secondary brand (royal violet luxury accent) ===== */
+  --secondary: #7a5cff;
+
+  --secondary-50:  #f3f1ff;
+  --secondary-100: #e7e3ff;
+  --secondary-200: #d2ccff;
+  --secondary-300: #b6aaff;
+  --secondary-400: #9a87ff;
+  --secondary-500: #866cff;
+  --secondary-600: #7a5cff;
+  --secondary-700: #6246e6;
+  --secondary-800: #4b33b8;
+  --secondary-900: #37258a;
+
+  /* semantic */
+  --success: #18b47b;
+  --warning: #f5a524;
+  --error: #e5484d;
+  --info: #3aa1ff;
+
+  /* neutrals */
+  --text-light: #0f172a;
+  --text-dark: #e5e7eb;
+
+  --surface-light: #ffffff;
+  --surface-dark: #0b0f1a;
+
+  --muted-light: #6b7280;
+  --muted-dark: #9ca3af;
+
+  --border-light: #e5e7eb;
+  --border-dark: #1f2937;
+}
+
+/* ===== Light ===== */
+:root {
+  --text-color: var(--text-light);
+  --surface: var(--surface-light);
+  --muted-text: var(--muted-light);
+  --border-color: var(--border-light);
+
+  --primary-hover: var(--primary-600);
+  --primary-active: var(--primary-800);
+
+  --secondary-hover: var(--secondary-700);
+  --secondary-active: var(--secondary-800);
+
+  --error-bg: color-mix(in srgb, var(--error) 12%, white);
+  --success-bg: color-mix(in srgb, var(--success) 12%, white);
+  --warning-bg: color-mix(in srgb, var(--warning) 12%, white);
+}
+
+/* ===== Dark ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: var(--text-dark);
+    --surface: var(--surface-dark);
+    --muted-text: var(--muted-dark);
+    --border-color: var(--border-dark);
+
+    --primary-hover: var(--primary-400);
+    --primary-active: var(--primary-300);
+
+    --secondary-hover: var(--secondary-400);
+    --secondary-active: var(--secondary-300);
+
+    --error-bg: color-mix(in srgb, var(--error) 20%, black);
+    --success-bg: color-mix(in srgb, var(--success) 20%, black);
+    --warning-bg: color-mix(in srgb, var(--warning) 20%, black);
+  }
+}
