@@ -29,6 +29,7 @@ const Editor = () => {
         doc: content || '',
         extensions: [
           basicSetup,
+          EditorView.lineWrapping,
           markdown(),
           githubLight,
           EditorView.updateListener.of((update) => {
