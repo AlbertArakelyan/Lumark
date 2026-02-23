@@ -141,7 +141,7 @@ export default [
       'comma-dangle': ['error', 'always-multiline'],
       'comma-style': ['error', 'last'],
       'indent': ['error', 2, { SwitchCase: 1 }],
-      'linebreak-style': ['error', 'unix'],
+      // 'linebreak-style': ['error', 'unix'],
       'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }],
       'no-trailing-spaces': 'error',
       'eol-last': ['error', 'always'],
