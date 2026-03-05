@@ -25,22 +25,21 @@ const EditorMode = () => {
     <button
       key={button.value}
       onClick={() => handleEditorModeChange(button.value)}
-      className={`${button.value === editorMode ? 'bg-gray-300' : ''} inline-flex items-center p-1 border border-gray-300 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 hover:cursor-pointer`}
+      className={`${button.value === editorMode ? 'bg-gray-300' : ''} inline-flex items-center p-1 border border-gray-300 text-sm font-medium rounded-md focus:outline-none hover:cursor-pointer`}
     >
       {button.icon}
     </button>
   ));
 
   return (
-    <div className="flex items-center justify-start flex-col fixed top-0 left-1/2 -translate-x-1/2  z-10">
-      <div className={`${isCollapsed ? 'hidden' : ''} w-max flex items-center gap-2 bg-white py-1`}>
+    <div className="flex items-center justify-start flex-col fixed top-0 left-1/2 -translate-x-1/2 z-10 group">
+      <div className="w-max items-center gap-1 bg-white py-1 group-hover:flex hidden">
         {buttonsContent}
       </div>
       <button
-        className="py-1 px-2 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 active:bg-gray-200 hover:cursor-pointer rounded-b-lg"
-        onClick={handleCollapseToggle}
+        className="py-1 px-2 hover:bg-gray-100 hover:text-gray-900 focus:outline-none hover:cursor-pointer rounded-b-lg group-hover:bg-gray-100"
       >
-        {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+        <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
       </button>
     </div>
   );
