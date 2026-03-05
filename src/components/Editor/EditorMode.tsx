@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAppContext } from '../../contexts/AppProvider.tsx';
 import { EditorModeEnum } from '../../types/editor/editorEnums.ts';
-import { EyeIcon, PencilIcon, SplitSquareHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
+import { EyeIcon, PencilIcon, SplitSquareHorizontal, ChevronDown } from 'lucide-react';
 
 const editorModeButtons: {
   label: string;
@@ -15,11 +15,6 @@ const editorModeButtons: {
 
 const EditorMode = () => {
   const { editorMode, handleEditorModeChange } = useAppContext();
-  const [isCollapsed, setIsCollapsed] = useState(true);
-
-  const handleCollapseToggle = () => {
-    setIsCollapsed((prev) => !prev);
-  };
 
   const buttonsContent = editorModeButtons.map((button) => (
     <button
