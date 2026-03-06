@@ -43,7 +43,7 @@
 ## Roadmap
 
 - [x] Linebreaks inside of the editor (togglable or as a deafult behavior)
-- [ ] Mode selection (Edit, View, Split)
+- [x] Mode selection (Edit, View, Split)
 - [ ] Multiple files selection
 - [ ] Dark mode
 - [ ] Support Tab and Shift+Tab (for tabbing and back-tabbing)
