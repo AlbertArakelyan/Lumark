@@ -44,9 +44,10 @@
 
 - [x] Linebreaks inside of the editor (togglable or as a deafult behavior)
 - [x] Mode selection (Edit, View, Split)
+- [ ] Support Tab and Shift+Tab (for tabbing and back-tabbing)
+- [ ] Support Key Shortcuts (Ctrl+B, Ctrl+I, Ctrl+U, etc.)
 - [ ] Multiple files selection
 - [ ] Dark mode
-- [ ] Support Tab and Shift+Tab (for tabbing and back-tabbing)
 - [ ] Support `mermaid` diagrams
 
 
