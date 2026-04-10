@@ -3,13 +3,13 @@ import { IFileItemProps } from './types';
 import { useAppContext } from '../../../../contexts/AppProvider';
 
 const FileItem: FC<IFileItemProps> = ({ file }) => {
-  const { handleFileSelect, selectedFile } = useAppContext();
+  const { selectFile, selectedFile } = useAppContext();
 
   const epoch = Number(file.date_created);
 
   const handleFileClick = (fileName: string) => {
     console.log(`File clicked: ${fileName}`);
-    handleFileSelect(fileName);
+    selectFile(fileName);
   };
 
   return (

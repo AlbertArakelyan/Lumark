@@ -9,7 +9,7 @@ interface IAppContext {
   editorMode: EditorModeEnum;
   handleEditorModeChange: (mode: EditorModeEnum) => void;
   files: IFileInfo[];
-  handleFileSelect: (fileName: string) => void;
+  selectFile: (fileName: string) => void;
   selectedFile: string | null;
   fetchFiles: () => Promise<void>;
 }
@@ -26,7 +26,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setEditorMode(mode);
   };
 
-  const handleFileSelect = (fileName: string) => {
+  const selectFile = (fileName: string) => {
     setSelectedFile(fileName);
   };
 
@@ -112,7 +112,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     editorMode,
     handleEditorModeChange,
     files,
-    handleFileSelect,
+    selectFile,
     selectedFile,
     fetchFiles,
   };
