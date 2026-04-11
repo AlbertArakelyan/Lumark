@@ -155,7 +155,7 @@ fn load_files(app: AppHandle) -> Result<Vec<FileInfo>, String> {
 }
 
 #[tauri::command]
-fn delete_file(app: AppHandle, file_name: String) -> Result<(), String> {
+fn delete_file_by_name(app: AppHandle, file_name: String) -> Result<(), String> {
     use std::fs;
 
     let app_dir = app
@@ -186,7 +186,7 @@ pub fn run() {
             load_files,
             load_content_by_name,
             save_content_by_name,
-            delete_file
+            delete_file_by_name
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

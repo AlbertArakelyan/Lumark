@@ -10,6 +10,7 @@ interface IAppContext {
   handleEditorModeChange: (mode: EditorModeEnum) => void;
   files: IFileInfo[];
   selectFile: (fileName: string) => void;
+  deleteFile: (fileName: string) => Promise<void>;
   selectedFile: string | null;
   fetchFiles: () => Promise<void>;
 }
@@ -29,6 +30,22 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const selectFile = (fileName: string) => {
     setSelectedFile(fileName);
   };
+
+  const deleteFile = async (fileName: string) => {
+    try {
+      await invoke('delete_file_by_name', { fileName });
+      // Refresh the file list after deletion
+      await fetchFiles();
+      // If the deleted file was the selected one, clear the content and selection
+      if (selectedFile === fileName) {
+        setSelectedFile(null);
+        setContent('');
+      }
+    } catch (error) {
+      console.error('Failed to delete file:', error);
+    }
+  };
+
 
   const fetchFiles = async () => {
     try {
@@ -113,6 +130,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     handleEditorModeChange,
     files,
     selectFile,
+    deleteFile,
     selectedFile,
     fetchFiles,
   };
