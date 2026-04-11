@@ -37,10 +37,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       // Refresh the file list after deletion
       await fetchFiles();
       // If the deleted file was the selected one, clear the content and selection
-      if (selectedFile === fileName) {
-        setSelectedFile(null);
-        setContent('');
-      }
+      setSelectedFile((currentSelectedFile) => {
+        if (currentSelectedFile === fileName) {
+          setContent('');
+          return null;
+        }
+        return currentSelectedFile;
+      });
     } catch (error) {
       console.error('Failed to delete file:', error);
     }
