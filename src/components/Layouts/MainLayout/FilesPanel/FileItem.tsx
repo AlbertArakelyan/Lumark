@@ -15,6 +15,8 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
   };
 
   const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); // Prevent the click event from bubbling up to the file item
+
     // TODO: Replace the window.confirm with a custom modal for better UX
     const shouldDelete = window.confirm(`Are you sure you want to delete the file "${file.file_name}"? This action cannot be undone.`);
 
@@ -22,7 +24,6 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
       return;
     }
 
-    e.stopPropagation(); // Prevent the click event from bubbling up to the file item
     console.log(`Delete clicked for file: ${file.file_name}`);
     // Call the delete function from context here, e.g., deleteFile(file.file_name);
     deleteFile(file.file_name);
