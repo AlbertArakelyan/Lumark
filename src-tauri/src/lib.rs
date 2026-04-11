@@ -154,6 +154,26 @@ fn load_files(app: AppHandle) -> Result<Vec<FileInfo>, String> {
     Ok(files)
 }
 
+#[tauri::command]
+fn delete_file_by_name(app: AppHandle, file_name: String) -> Result<(), String> {
+    use std::fs;
+
+    let app_dir = app
+        .path()
+        .app_data_dir()
+        .expect("failed to retrieve app data dir");
+
+    let file_path = app_dir.join(file_name + ".md");
+
+    if file_path.exists() {
+        fs::remove_file(&file_path)
+            .map_err(|e| format!("Failed to delete file: {}", e))?;
+        Ok(())
+    } else {
+        Err("File not found".to_string())
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -165,7 +185,8 @@ pub fn run() {
             add_file,
             load_files,
             load_content_by_name,
-            save_content_by_name
+            save_content_by_name,
+            delete_file_by_name
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
