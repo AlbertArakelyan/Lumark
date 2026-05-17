@@ -21,6 +21,34 @@ No test runner is configured.
 
 The Tauri dev port `1420` is `strictPort: true` — a stale process holding the port will fail the dev server.
 
+## First-time setup: MCP (`.mcp.json`)
+
+`.mcp.json` is **gitignored** so each contributor can add their own API keys without leaking secrets. The committed template is `.mcp.example.json`.
+
+On a fresh clone, copy the template:
+
+```bash
+cp .mcp.example.json .mcp.json
+```
+
+That's enough to get Context7 working at the free tier — the hosted endpoint (`https://mcp.context7.com/mcp`) requires no auth for basic usage. If you have a Context7 API key, add an `Authorization` header inside `.mcp.json` (not the example — never commit secrets):
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": { "Authorization": "Bearer <YOUR_KEY>" }
+    }
+  }
+}
+```
+
+The repo's committed `.claude/settings.json` already pre-approves the `context7` server via `enabledMcpjsonServers`, so Claude Code won't prompt to enable it once `.mcp.json` exists locally.
+
+If `.mcp.json` is missing, the `docs-explorer` skill and the `mcp__context7__*` tools won't be available — the skill flags this and falls back to a personal claude.ai Context7 connection if you have one.
+
 ## Architecture
 
 ### Two-process model
@@ -84,6 +112,40 @@ Pattern to follow exactly (see `src/components/UI/Button/`, `src/components/UI/I
 
 ### Styling
 Tailwind v4 via `@tailwindcss/vite` (no separate `tailwind.config.js` v3-style content scanning needed at runtime). Custom CSS variables for theme tokens like `bg-surface`, `text-text-color`, `border-border-color` are defined in `src/assets/css/`.
+
+## Folder-scoped rules
+
+Nested `CLAUDE.md` files layer additional rules that apply when working inside those folders:
+
+- `src-tauri/CLAUDE.md` — Rust/Tauri backend: command shape, the three-step IPC contract, file-extension contract, naming conventions.
+- `src/contexts/CLAUDE.md` — global state and effect-ordering invariants in `AppProvider`.
+- `src/components/Editor/CLAUDE.md` — CodeMirror lifecycle invariants and the React↔CodeMirror sync pattern.
+- `src/components/UI/CLAUDE.md` — full pattern for in-house UI primitives.
+
+These are auto-loaded by Claude Code when working in those subtrees — you don't need to import them.
+
+## Project skills (`.claude/skills/`)
+
+Skills auto-trigger when a task matches their description. Available in this repo:
+
+- `committer` — drafts commits in the `<type>(<issue#>): <subject>` format, deriving the issue number from the branch name.
+- `ipc-command-creator` — adds a new Tauri `#[tauri::command]` end-to-end (Rust fn + `invoke_handler!` registration + frontend wiring).
+- `ipc-command-invoker` — calls an *existing* Tauri command from a new place in the frontend (no Rust changes).
+- `ui-component-creator` — scaffolds a new UI primitive under `src/components/UI/` following the Button/Input pattern.
+- `docs-explorer` — answers library/framework/API questions by consulting Context7 (`mcp__context7__*` from the project `.mcp.json`) — used for React 19, Tauri 2, CodeMirror 6, Tailwind 4, etc.
+- `eslint-fixer` — runs `yarn lint`, applies safe `--fix`, hand-fixes the remainder respecting the empty-dep-array invariants in `AppProvider.tsx` and `Editor.tsx`.
+- `issue-starter` — given a GitHub issue number, runs `gh issue view`, creates the branch in `<issue#>-<kebab-summary>` form, and summarises the scope (CONTRIBUTING.md steps 1–3).
+- `codemirror-extension-adder` — adds CodeMirror 6 extensions to the editor following the static-vs-reactive (`Compartment`) decision and the lifecycle invariants in `src/components/Editor/CLAUDE.md`.
+
+## Rule catalog (reference only — not auto-loaded)
+
+`.claude/rules/` is a human-browsable catalog. **Claude Code does not auto-load anything from this folder** — only `CLAUDE.md` files auto-load. The catalog exists so a person (or a conversation pointing at `@.claude/rules/<name>.md`) can read the rules in one place. Cross-cutting rules that don't fit any single folder live there:
+
+- `.claude/rules/ipc.md` — frontend ↔ Rust IPC contract end-to-end
+- `.claude/rules/commits-and-branches.md` — git workflow, commit-message format
+- `.claude/rules/code-style.md` — ESLint highlights, file naming, the versioning quirk, "no test runner"
+
+The folder-scoped rules (UI, Editor, contexts, src-tauri) are also mirrored there, but the **nested `CLAUDE.md` files above are authoritative** — those are what Claude Code actually loads. See `.claude/rules/README.md` for the full index and authority rules.
 
 ## Conventions observed in this repo
 

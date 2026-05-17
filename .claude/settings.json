@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "enabledMcpjsonServers": ["context7"],
+  "permissions": {
+    "allow": [
+      "Bash(yarn install)",
+      "Bash(yarn lint)",
+      "Bash(yarn lint:fix)",
+      "Bash(yarn build)",
+      "Bash(yarn dev)",
+      "Bash(yarn tauri:*)",
+      "Bash(npx tsc:*)",
+      "Bash(cargo check:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo fmt:*)",
+      "Bash(cargo clippy:*)",
+      "Bash(git status)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git show:*)",
+      "Bash(git add:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs"
+    ]
+  }
+}
