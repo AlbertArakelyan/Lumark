@@ -139,19 +139,21 @@ There is **no test runner configured** (no Jest/Vitest/Playwright). Do not add o
 
 ### File storage
 
-Notes are flat `.md` files inside Tauri's `app_data_dir()` (resolved per-OS by `app.path().app_data_dir()`).
+Notes are flat `.md` files inside a `notes/` subdirectory of Tauri's `app_data_dir()` (resolved per-OS by `app.path().app_data_dir()`).
 
 Bundle identifier: `com.albertarakelyan.lumark` (set in `src-tauri/tauri.conf.json`). Tauri resolves `app_data_dir()` to:
 
 | OS | Path |
 | --- | --- |
-| Linux | `$XDG_DATA_HOME/com.albertarakelyan.lumark/` or `$HOME/.local/share/com.albertarakelyan.lumark/` |
-| macOS | `$HOME/Library/Application Support/com.albertarakelyan.lumark/` |
-| Windows | `%APPDATA%\com.albertarakelyan.lumark\` (typically `C:\Users\<User>\AppData\Roaming\com.albertarakelyan.lumark\`) |
+| Linux | `$XDG_DATA_HOME/com.albertarakelyan.lumark/notes/` or `$HOME/.local/share/com.albertarakelyan.lumark/notes/` |
+| macOS | `$HOME/Library/Application Support/com.albertarakelyan.lumark/notes/` |
+| Windows | `%APPDATA%\com.albertarakelyan.lumark\notes\` (typically `C:\Users\<User>\AppData\Roaming\com.albertarakelyan.lumark\notes\`) |
 
 This is also where you can inspect or back up the user's notes during development.
 
-**Extension contract**: the frontend identifies files by their **base name without the `.md` extension**. The Rust side appends it (`app_dir.join(file_name + ".md")`). Passing an already-extended name from JS produces `foo.md.md`. `load_files` returns names via `path.file_stem()`.
+Why the `notes/` subdirectory: on Linux the parent `app_data_dir` is shared with WebKitGTK, which writes runtime files (`hsts-storage.md`, `hsts-storage.sqlite`, `cookies.*`) directly into it. Keeping notes one level down isolates them from WebKit state. A startup migration in `src-tauri/src/lib.rs` (`migrate_notes_to_subdir`) moves any pre-existing top-level `*.md` files into `notes/` once — `hsts-storage.md` is explicitly skipped because WebKit recreates it.
+
+**Extension contract**: the frontend identifies files by their **base name without the `.md` extension**. The Rust side appends it (`notes_dir.join(file_name + ".md")`). Passing an already-extended name from JS produces `foo.md.md`. `load_files` returns names via `path.file_stem()`.
 
 ### Global state
 

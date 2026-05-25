@@ -59,7 +59,9 @@ If `.mcp.json` is missing, the `docs-explorer` skill and the `mcp__context7__*` 
 When adding any feature that reads/writes user data, you must (1) add a `#[tauri::command]` in `src-tauri/src/lib.rs`, (2) register it in the `invoke_handler!` macro at the bottom of that file, and (3) call it from the frontend via `invoke(...)`.
 
 ### File storage model
-All notes are flat `.md` files inside Tauri's `app_data_dir()` (resolved per-OS by `app.path().app_data_dir()`).
+All notes are flat `.md` files inside a `notes/` subdirectory of Tauri's `app_data_dir()` (resolved per-OS by `app.path().app_data_dir()`). The subdirectory exists so notes don't sit next to WebKit-managed files (`hsts-storage.*`, `cookies.*`) that Tauri writes into `app_data_dir` on Linux. The Rust side resolves it through a `notes_dir(&app)` helper in `src-tauri/src/lib.rs` that creates the dir on demand; commands must use that helper rather than joining straight onto `app_data_dir()`.
+
+A startup migration (`migrate_notes_to_subdir`) moves any pre-existing top-level `*.md` files into `notes/` once, skipping `hsts-storage.md` and any name that would overwrite an existing target.
 
 A critical convention: **the frontend identifies files by their base name without the `.md` extension**. The Rust commands do `file_name + ".md"` themselves (see `load_content_by_name`, `save_content_by_name`, `add_file`, `delete_file_by_name`). Do not pass an already-extended name from JS — it will produce `foo.md.md`. `load_files` returns names via `path.file_stem()`, also extension-stripped.
 
