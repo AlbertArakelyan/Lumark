@@ -25,6 +25,24 @@ fn notes_dir(app: &AppHandle) -> Result<PathBuf, String> {
     Ok(notes)
 }
 
+// Resolve notes_dir/<file_name>.md, rejecting names that would let the path
+// escape notes/ (path separators, parent-dir refs, absolute paths, NUL).
+// All commands that accept a frontend-supplied file_name must go through this.
+fn notes_file_path(app: &AppHandle, file_name: &str) -> Result<PathBuf, String> {
+    if file_name.is_empty() {
+        return Err("File name cannot be empty".to_string());
+    }
+    if file_name.contains('/') || file_name.contains('\\') || file_name.contains('\0') {
+        return Err("File name contains invalid characters".to_string());
+    }
+    if file_name == "." || file_name == ".." {
+        return Err("Invalid file name".to_string());
+    }
+
+    let notes = notes_dir(app)?;
+    Ok(notes.join(format!("{}.md", file_name)))
+}
+
 // One-time migration: move every *.md file from the top of app_data_dir
 // into app_data_dir/notes/. Skips WebKit-managed files and skips any name
 // that would overwrite an existing file in notes/.
@@ -119,8 +137,7 @@ fn load_content(app: AppHandle) -> Result<String, String> {
 fn load_content_by_name(app: AppHandle, file_name: String) -> Result<String, String> {
     use std::fs;
 
-    let notes = notes_dir(&app)?;
-    let file_path = notes.join(file_name + ".md");
+    let file_path = notes_file_path(&app, &file_name)?;
 
     if file_path.exists() {
         let content = fs::read_to_string(&file_path)
@@ -135,8 +152,7 @@ fn load_content_by_name(app: AppHandle, file_name: String) -> Result<String, Str
 fn save_content_by_name(app: AppHandle, file_name: String, content: String) -> Result<(), String> {
     use std::fs;
 
-    let notes = notes_dir(&app)?;
-    let file_path = notes.join(file_name + ".md");
+    let file_path = notes_file_path(&app, &file_name)?;
 
     fs::write(&file_path, content)
         .map_err(|e| format!("Failed to write content file: {}", e))?;
@@ -148,8 +164,7 @@ fn save_content_by_name(app: AppHandle, file_name: String, content: String) -> R
 fn add_file(app: AppHandle, file_name: String) -> Result<(), String> {
     use std::fs;
 
-    let notes = notes_dir(&app)?;
-    let file_path = notes.join(file_name + ".md");
+    let file_path = notes_file_path(&app, &file_name)?;
 
     fs::write(&file_path, "")
         .map_err(|e| format!("Failed to create file: {}", e))?;
@@ -193,8 +208,7 @@ fn load_files(app: AppHandle) -> Result<Vec<FileInfo>, String> {
 fn delete_file_by_name(app: AppHandle, file_name: String) -> Result<(), String> {
     use std::fs;
 
-    let notes = notes_dir(&app)?;
-    let file_path = notes.join(file_name + ".md");
+    let file_path = notes_file_path(&app, &file_name)?;
 
     if file_path.exists() {
         fs::remove_file(&file_path)
