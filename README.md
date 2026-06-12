@@ -20,7 +20,7 @@
   </p> -->
   <p>
     A simple, local-first Markdown editor<!--inspired by MiaoYan,--> built for Windows, Linux, and macOS. <br>
-    No accounts. No databases. No cloud lock-in. Just your Markdown files and your disraction free workspace.
+    No accounts. No databases. No cloud lock-in. Just your Markdown files and your distraction-free workspace.
   </p>
 </div>
 
