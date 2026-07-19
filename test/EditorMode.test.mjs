@@ -8,12 +8,16 @@ const editorModeSource = await readFile(
   'utf8',
 );
 
-test('mode selection buttons transition to a hover background', () => {
-  const buttonsContent = editorModeSource.slice(
-    editorModeSource.indexOf('const buttonsContent'),
-    editorModeSource.indexOf('\n\n  return'),
+test('mode selection buttons preserve the active background on hover', () => {
+  const modeButton = editorModeSource.match(
+    /<button\s+key=\{button\.value\}[\s\S]*?className=\{`([^`]*)`\}[\s\S]*?>/,
   );
 
-  assert.match(buttonsContent, /hover:bg-gray-200/);
-  assert.match(buttonsContent, /transition-colors/);
+  assert.ok(modeButton, 'mode button className should be present');
+  assert.match(
+    modeButton[1],
+    /\$\{button\.value === editorMode \? 'bg-gray-300' : 'hover:bg-gray-200'\}/,
+    'active and inactive mode colors must be mutually exclusive',
+  );
+  assert.match(modeButton[1], /\btransition-colors\b/);
 });
