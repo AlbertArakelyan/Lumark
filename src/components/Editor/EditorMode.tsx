@@ -20,7 +20,7 @@ const EditorMode = () => {
     <button
       key={button.value}
       onClick={() => handleEditorModeChange(button.value)}
-      className={`${button.value === editorMode ? 'bg-gray-300' : ''} inline-flex items-center p-1 border border-gray-300 text-sm font-medium rounded-md focus:outline-none hover:cursor-pointer`}
+      className={`${button.value === editorMode ? 'bg-gray-300' : 'hover:bg-gray-200'} inline-flex items-center p-1 border border-gray-300 text-sm font-medium rounded-md focus:outline-none hover:cursor-pointer transition-colors`}
     >
       {button.icon}
     </button>
