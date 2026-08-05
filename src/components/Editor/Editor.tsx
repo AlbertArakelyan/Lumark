@@ -13,7 +13,6 @@ import 'github-markdown-css/github-markdown-light.css'; // TODO: remove light th
 // Reference: https://github.com/sindresorhus/github-markdown-css
 
 import { useAppContext } from '../../contexts/AppProvider.tsx';
-import EditorMode from './EditorMode.tsx';
 import { EditorModeEnum } from '../../types/editor/editorEnums.ts';
 
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
@@ -82,7 +81,6 @@ const Editor = () => {
 
   return (
     <>
-      <EditorMode />
       <div className="flex items-start justify-between gap-2 p-2">
         <div className={`w-1/2 ${editorMode === EditorModeEnum.PREVIEW ? 'hidden' : ''} ${editorMode === EditorModeEnum.EDIT ? '!w-full' : ''}`}>
           <div id="editor-container"></div>

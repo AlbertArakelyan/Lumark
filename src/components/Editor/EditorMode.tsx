@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../contexts/AppProvider.tsx';
 import { EditorModeEnum } from '../../types/editor/editorEnums.ts';
-import { EyeIcon, PencilIcon, SplitSquareHorizontal, ChevronDown } from 'lucide-react';
+import { EyeIcon, PencilIcon, SplitSquareHorizontal } from 'lucide-react';
 
 const editorModeButtons: {
   label: string;
@@ -27,15 +27,8 @@ const EditorMode = () => {
   ));
 
   return (
-    <div className="flex items-center justify-start flex-col fixed top-0 left-1/2 -translate-x-1/2 z-10 group">
-      <div className="w-max items-center gap-1 bg-white py-1 group-hover:flex hidden">
-        {buttonsContent}
-      </div>
-      <button
-        className="py-1 px-2 hover:bg-gray-100 hover:text-gray-900 focus:outline-none hover:cursor-pointer rounded-b-lg group-hover:bg-gray-100"
-      >
-        <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
-      </button>
+    <div className="flex w-max items-center gap-1">
+      {buttonsContent}
     </div>
   );
 };
