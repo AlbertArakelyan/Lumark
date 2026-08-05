@@ -11,8 +11,9 @@ const MainLayout: FC<PropsWithChildren> = ({ children }) => (
         <FilesPanel />
       </aside>
       <main className="flex-1 overflow-auto">
-      {children}
-    </main>
+        {children}
+      </main>
+    </div>
   </div>
 );
 
