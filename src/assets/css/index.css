@@ -8,3 +8,9 @@
 html, body {
   font-size: 16px;
 }
+
+/* The app shell owns every scroll container — the window itself must never scroll. */
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
