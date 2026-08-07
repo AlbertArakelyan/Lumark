@@ -82,10 +82,10 @@ const Editor = () => {
   return (
     <>
       <div className="flex items-start justify-between gap-2 p-2">
-        <div className={`w-1/2 ${editorMode === EditorModeEnum.PREVIEW ? 'hidden' : ''} ${editorMode === EditorModeEnum.EDIT ? '!w-full' : ''}`}>
+        <div className={`w-1/2 min-w-0 ${editorMode === EditorModeEnum.PREVIEW ? 'hidden' : ''} ${editorMode === EditorModeEnum.EDIT ? '!w-full' : ''}`}>
           <div id="editor-container"></div>
         </div>
-        <div className={`w-1/2 ${editorMode === EditorModeEnum.EDIT ? 'hidden' : ''} ${editorMode === EditorModeEnum.PREVIEW ? '!w-full' : ''}`}>
+        <div className={`w-1/2 min-w-0 ${editorMode === EditorModeEnum.EDIT ? 'hidden' : ''} ${editorMode === EditorModeEnum.PREVIEW ? '!w-full' : ''}`}>
           <article className="markdown-body">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
