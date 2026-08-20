@@ -1,7 +1,10 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { EditorModeEnum } from '../types/editor/editorEnums.ts';
 import { IFileInfo } from '../types/file/fileTypes.ts';
+import useDebounce from '../hooks/useDebounce.ts';
+
+const SEARCH_DEBOUNCE_DELAY = 300;
 
 interface IAppContext {
   content: string;
@@ -9,6 +12,10 @@ interface IAppContext {
   editorMode: EditorModeEnum;
   handleEditorModeChange: (mode: EditorModeEnum) => void;
   files: IFileInfo[];
+  filteredFiles: IFileInfo[];
+  searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+  isSearching: boolean;
   selectFile: (fileName: string) => void;
   deleteFile: (fileName: string) => Promise<void>;
   selectedFile: string | null;
@@ -22,6 +29,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [editorMode, setEditorMode] = useState<EditorModeEnum>(EditorModeEnum.SPLIT);
   const [files, setFiles] = useState<IFileInfo[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const debouncedSearchQuery = useDebounce(searchQuery, SEARCH_DEBOUNCE_DELAY);
+  const normalizedSearchQuery = debouncedSearchQuery.trim().toLowerCase();
+
+  const filteredFiles = useMemo(() => {
+    if (!normalizedSearchQuery) {
+      return files;
+    }
+
+    return files.filter((file) => file.file_name.toLowerCase().includes(normalizedSearchQuery));
+  }, [files, normalizedSearchQuery]);
 
   const handleEditorModeChange = (mode: EditorModeEnum) => {
     setEditorMode(mode);
@@ -132,6 +151,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     editorMode,
     handleEditorModeChange,
     files,
+    filteredFiles,
+    searchQuery,
+    setSearchQuery,
+    isSearching: Boolean(normalizedSearchQuery),
     selectFile,
     deleteFile,
     selectedFile,

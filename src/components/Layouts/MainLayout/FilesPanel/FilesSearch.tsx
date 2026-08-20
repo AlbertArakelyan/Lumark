@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { SquarePenIcon } from 'lucide-react';
+import { SearchIcon, SquarePenIcon, XIcon } from 'lucide-react';
 import Button from '../../../UI/Button/Button';
 import Input from '../../../UI/Input/Input';
 import { useAppContext } from '../../../../contexts/AppProvider';
 
 const FilesSearch = () => {
-  const { fetchFiles } = useAppContext();
+  const { fetchFiles, searchQuery, setSearchQuery } = useAppContext();
 
   const [isAddingFile, setIsAddingFile] = useState(false);
   const [fileName, setFileName] = useState('');
@@ -31,6 +31,8 @@ const FilesSearch = () => {
 
       setIsAddingFile(false);
       setFileName('');
+      // Clear the search so the freshly added file is visible in the list
+      setSearchQuery('');
     } catch (error) {
       console.error('Error adding file:', error);
     }
@@ -38,6 +40,20 @@ const FilesSearch = () => {
 
   const handleFileNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileName(e.target.value);
+  };
+
+  const handleSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      handleClearSearch();
+    }
   };
 
   return (
@@ -75,6 +91,22 @@ const FilesSearch = () => {
             key="file-search-input"
             placeholder="Search"
             rounded="rounded"
+            icon={searchQuery ? (
+              <Button
+                variant="ghost"
+                size="square-icon"
+                rounded="circle"
+                className="!p-0.5"
+                icon={<XIcon size={16} />}
+                aria-label="Clear search"
+                onClick={handleClearSearch}
+              />
+            ) : (
+              <SearchIcon size={16} className="text-muted-text" />
+            )}
+            value={searchQuery}
+            onChange={handleSearchQueryChange}
+            onKeyDown={handleSearchKeyDown}
           />
           <Button
             variant="ghost"
