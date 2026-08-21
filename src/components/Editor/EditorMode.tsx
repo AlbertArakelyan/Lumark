@@ -14,17 +14,26 @@ const editorModeButtons: {
 ];
 
 const EditorMode = () => {
-  const { editorMode, handleEditorModeChange } = useAppContext();
+  const { editorMode, handleEditorModeChange, selectedFile } = useAppContext();
 
-  const buttonsContent = editorModeButtons.map((button) => (
-    <button
-      key={button.value}
-      onClick={() => handleEditorModeChange(button.value)}
-      className={`${button.value === editorMode ? 'bg-gray-300' : 'hover:bg-gray-200'} inline-flex items-center p-1 border border-gray-300 text-sm font-medium rounded-md focus:outline-none hover:cursor-pointer transition-colors`}
-    >
-      {button.icon}
-    </button>
-  ));
+  // Without a selected file there is no editor to switch modes on
+  const isDisabled = !selectedFile;
+
+  const buttonsContent = editorModeButtons.map((button) => {
+    const stateClassName = button.value === editorMode ? 'bg-gray-300' : (isDisabled ? '' : 'hover:bg-gray-200');
+    const interactionClassName = isDisabled ? 'cursor-not-allowed opacity-50' : 'hover:cursor-pointer';
+
+    return (
+      <button
+        key={button.value}
+        disabled={isDisabled}
+        onClick={() => handleEditorModeChange(button.value)}
+        className={`${stateClassName} ${interactionClassName} inline-flex items-center p-1 border border-gray-300 text-sm font-medium rounded-md focus:outline-none transition-colors`}
+      >
+        {button.icon}
+      </button>
+    );
+  });
 
   return (
     <div className="flex w-max items-center gap-1">
