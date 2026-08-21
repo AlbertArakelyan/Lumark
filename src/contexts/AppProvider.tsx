@@ -18,6 +18,7 @@ interface IAppContext {
   isSearching: boolean;
   selectFile: (fileName: string) => void;
   deleteFile: (fileName: string) => Promise<void>;
+  renameFile: (oldFileName: string, newFileName: string) => Promise<void>;
   selectedFile: string | null;
   fetchFiles: () => Promise<void>;
 }
@@ -65,6 +66,20 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       });
     } catch (error) {
       console.error('Failed to delete file:', error);
+    }
+  };
+
+  const renameFile = async (oldFileName: string, newFileName: string) => {
+    try {
+      await invoke('rename_file_by_name', { oldFileName, newFileName });
+      await fetchFiles();
+      // Keep the open file selected under its new name
+      setSelectedFile((currentSelectedFile) => (
+        currentSelectedFile === oldFileName ? newFileName : currentSelectedFile
+      ));
+    } catch (error) {
+      console.error('Failed to rename file:', error);
+      throw error;
     }
   };
 
@@ -157,6 +172,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     isSearching: Boolean(normalizedSearchQuery),
     selectFile,
     deleteFile,
+    renameFile,
     selectedFile,
     fetchFiles,
   };

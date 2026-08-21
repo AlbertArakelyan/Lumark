@@ -219,6 +219,31 @@ fn delete_file_by_name(app: AppHandle, file_name: String) -> Result<(), String> 
     }
 }
 
+#[tauri::command]
+fn rename_file_by_name(app: AppHandle, old_file_name: String, new_file_name: String) -> Result<(), String> {
+    use std::fs;
+
+    let old_path = notes_file_path(&app, &old_file_name)?;
+    let new_path = notes_file_path(&app, &new_file_name)?;
+
+    if !old_path.exists() {
+        return Err("File not found".to_string());
+    }
+
+    if old_path == new_path {
+        return Ok(());
+    }
+
+    if new_path.exists() {
+        return Err(format!("A file named \"{}\" already exists", new_file_name));
+    }
+
+    fs::rename(&old_path, &new_path)
+        .map_err(|e| format!("Failed to rename file: {}", e))?;
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -237,7 +262,8 @@ pub fn run() {
             load_files,
             load_content_by_name,
             save_content_by_name,
-            delete_file_by_name
+            delete_file_by_name,
+            rename_file_by_name
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
