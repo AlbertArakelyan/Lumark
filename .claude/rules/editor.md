@@ -13,6 +13,7 @@ The editor mounts **CodeMirror 6 imperatively** alongside a **react-markdown** p
 3. **`isEditorContentSetInitially` gates the initial doc push** from React `content` → CodeMirror. It's reset to `false` when `selectedFile` changes so the new file's content is pushed once, then edits flow back through the `updateListener` without ping-ponging.
 4. **Updates back into React happen via `updateListener.of(...)`** calling `setContent(update.state.doc.toString())`. Don't introduce a parallel React-side sync.
 5. **Both panes stay mounted in SPLIT mode**; `EDIT` and `PREVIEW` hide the other half via `hidden` + `!w-full`. Don't replace this with conditional rendering — see invariant 2.
+6. **The whole `Editor` is only mounted when a file is selected.** `App.tsx` renders `<NoFileSelected />` in its place when `selectedFile` is `null` — otherwise users can type into a buffer with nowhere to save, which silently loses notes. The construction effect therefore runs when the first file is selected rather than at app start; its cleanup destroys the `EditorView`, so this unmount/remount is safe. Gate this on `selectedFile` only — never on `editorMode` (see invariant 2).
 
 ## Adding CodeMirror extensions
 
