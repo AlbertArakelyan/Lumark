@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from 'react';
+import FoldersPanel from './FoldersPanel/FoldersPanel';
 import FilesPanel from './FilesPanel/FilesPanel';
 import EditorMode from '../../Editor/EditorMode';
 
@@ -8,6 +9,9 @@ const MainLayout: FC<PropsWithChildren> = ({ children }) => (
       <EditorMode />
     </header>
     <div className="flex flex-1 min-h-0 overflow-hidden">
+      <aside className="w-32 shrink-0 min-h-0 border-r border-border-color">
+        <FoldersPanel />
+      </aside>
       <aside className="w-64 shrink-0 min-h-0 border-r border-border-color">
         <FilesPanel />
       </aside>
