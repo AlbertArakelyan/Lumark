@@ -35,7 +35,7 @@ References: `Button/Button.tsx` + `Button/types.ts`, `Input/Input.tsx` + `Input/
    }, [size]);
    ```
 9. **Styling is inline Tailwind utility classes**. No CSS modules, no styled-components, no CSS-in-JS, no external UI libs.
-10. **Theme tokens**: use the custom Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active` variants), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, etc. Don't hardcode hex colors.
+10. **Theme tokens**: use the custom Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active` variants), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, `text-folder`/`fill-folder` (the yellow used for folder icons), etc. Don't hardcode hex colors.
 
 ## Don'ts
 

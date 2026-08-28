@@ -61,24 +61,44 @@ When adding any feature that reads/writes user data, you must (1) add a `#[tauri
 ### File storage model
 All notes are flat `.md` files inside a `notes/` subdirectory of Tauri's `app_data_dir()` (resolved per-OS by `app.path().app_data_dir()`). The subdirectory exists so notes don't sit next to WebKit-managed files (`hsts-storage.*`, `cookies.*`) that Tauri writes into `app_data_dir` on Linux. The Rust side resolves it through a `notes_dir(&app)` helper in `src-tauri/src/lib.rs` that creates the dir on demand; commands must use that helper rather than joining straight onto `app_data_dir()`.
 
-A startup migration (`migrate_notes_to_subdir`) moves any pre-existing top-level `*.md` files into `notes/` once, skipping `hsts-storage.md` and any name that would overwrite an existing target.
+Notes live **one folder deep**: `notes/<folder>/<note>.md`. Nesting is exactly one level — there are no folders inside folders. Beyond `notes_dir`, the Rust side resolves paths through these helpers, and commands must use them rather than joining by hand:
 
-A critical convention: **the frontend identifies files by their base name without the `.md` extension**. The Rust commands do `file_name + ".md"` themselves (see `load_content_by_name`, `save_content_by_name`, `add_file`, `delete_file_by_name`). Do not pass an already-extended name from JS — it will produce `foo.md.md`. `load_files` returns names via `path.file_stem()`, also extension-stripped.
+- `folder_dir(&app, folder_name)` / `notes_file_path(&app, folder_name, file_name)` — **read** paths; validate but never create.
+- `ensure_folder_dir(...)` / `notes_file_path_ensured(...)` — **write** paths; create the folder so an autosave can't fail because the folder vanished under the UI.
+- `validate_name(name, label)` — the single shared guard rejecting separators, `.`/`..` and NUL. Folder names and file names deliberately share it so the rules can't drift apart.
+
+`general` is the default folder: both startup migrations land notes there, but it is otherwise an ordinary folder the user can rename or delete. Only `.setup()` guarantees it exists — `load_folders` must not recreate it, or a deleted `general` would come back.
+
+Two startup migrations run in `.setup()`, in this order, each individually non-fatal (`eprintln!` only):
+1. `migrate_loose_notes_to_default_folder` — `notes/*.md` → `notes/general/`.
+2. `migrate_root_notes_to_default_folder` — `app_data_dir/*.md` → `notes/general/` (skips `hsts-storage.md`).
+
+Loose notes go first because `notes/` is the newer authoritative location, so it wins the plain name. Both share `move_md_files_into`, which **never skips on collision** — it disambiguates via `unique_md_path` (`x.md`, `x (2).md`, …). Skipping would strand a note at a path no command can list, which users read as data loss.
+
+A critical convention: **the frontend identifies a note by its folder name plus its base name, both without the `.md` extension**. The Rust commands append `.md` themselves (see `load_content_by_name`, `save_content_by_name`, `add_file`, `delete_file_by_name`). Do not pass an already-extended name from JS — it will produce `foo.md.md`. `load_files` returns names via `path.file_stem()`, also extension-stripped. Because the same base name may now exist in several folders, anything keyed by file name alone needs the folder too.
 
 ### Global state
 There is one React context: `src/contexts/AppProvider.tsx`. It owns the *entire* app state:
 - `content` / `setContent` — the current editor buffer
 - `editorMode` (`SPLIT` | `EDIT` | `PREVIEW` from `editorEnums.ts`)
-- `files` — the file list loaded from Rust
+- `folders` — the folder list loaded from Rust; `selectedFolder` — the open folder's name
+- `files` — the file list for the **selected folder only**
 - `selectedFile` — the currently open file's base name
-- async ops: `fetchFiles`, `selectFile`, `deleteFile`
+- async ops: `fetchFolders`, `selectFolder`, `addFolder`, `renameFolder`, `deleteFolder`, `fetchFiles`, `selectFile`, `addFile`, `deleteFile`, `renameFile`
 
 Consume via `useAppContext()`. There is no Redux/Zustand/etc.
 
-The provider runs three effects that wire the data flow:
-1. On mount → `fetchFiles()`.
-2. When `selectedFile` changes → `invoke('load_content_by_name')` and set `content`.
-3. When `content` or `selectedFile` changes → **debounced 500 ms autosave** via `invoke('save_content_by_name')`. There is no explicit save action; every keystroke debounces a write.
+The provider runs **four** effects that wire the data flow:
+1. On mount → `fetchFolders()`, then select `general` if present, else the first folder. **No file fetch here.**
+2. When `selectedFolder` changes → `fetchFiles(selectedFolder)`. This is the only files-fetch path.
+3. When `selectedFolder` or `selectedFile` changes → `invoke('load_content_by_name')` and set `content`.
+4. When `selectedFolder`, `selectedFile` or `content` changes → **debounced 500 ms autosave** via `invoke('save_content_by_name')`. There is no explicit save action; every keystroke debounces a write.
+
+Because `content` is one global buffer with no identity, a `contentKeyRef` holding the current
+`folder/file` key gates the writes: the load effect stamps it, and the autosave effect refuses to
+write unless it matches the live selection. Without that, switching folder or file flushes the
+previous note's buffer into the newly selected path. See `src/contexts/CLAUDE.md` for the full
+invariant before touching these effects.
 
 Be careful when introducing new effects that touch `content` — they can race with the autosave debounce or with the initial-load effect.
 
@@ -90,7 +110,11 @@ Be careful when introducing new effects that touch `content` — they can race w
 The two panes are shown/hidden via Tailwind classes driven by `editorMode`; both remain mounted in `SPLIT` mode.
 
 ### Layout
-`MainLayout` is a fixed two-column shell: sidebar `FilesPanel` (`src/components/Layouts/MainLayout/FilesPanel/`) on the left, editor children on the right. There is no router.
+`MainLayout` is a fixed three-column shell: `FoldersPanel` (`w-32`) then `FilesPanel` (`w-64`, i.e. twice the folders panel) on the left, editor children on the right. There is no router. Each `<aside>` keeps `min-h-0` so both panels scroll independently of each other and of the editor.
+
+Search lives in `FilesPanel` and is scoped to the selected folder — `files` only ever holds that folder's notes, so `filteredFiles` needs no folder filtering. Cross-folder ("global") search is a future feature.
+
+The folders panel is genuinely narrow (~112px of usable row width), so folder rows are single-line, icon + truncated name with a `title` tooltip, and hover-revealed rename/delete buttons. Don't add a second line or wide text buttons there.
 
 ### UI components (`src/components/UI/`)
 This folder is a small in-house UI library. When rendering a generic UI element (button, input, modal, textarea, card, etc.), **first check `src/components/UI/` and reuse what exists**. Don't reach for an external UI library.
@@ -113,7 +137,9 @@ Pattern to follow exactly (see `src/components/UI/Button/`, `src/components/UI/I
 8. Styling is Tailwind utility classes inline in the component — do not introduce CSS modules or styled-components for UI primitives.
 
 ### Styling
-Tailwind v4 via `@tailwindcss/vite` (no separate `tailwind.config.js` v3-style content scanning needed at runtime). Custom CSS variables for theme tokens like `bg-surface`, `text-text-color`, `border-border-color` are defined in `src/assets/css/`.
+Tailwind v4 via `@tailwindcss/vite`, but there **is** a v3-style `tailwind.config.js` (CommonJS) at the repo root, loaded explicitly by `@config "../../../tailwind.config.js"` in `src/assets/css/index.css`. That file is where the semantic colour names live. Note it is `.js`, not `.ts`.
+
+Theme tokens therefore take **two edits** — the CSS variable in `src/assets/css/base.css` and the Tailwind colour mapping in `tailwind.config.js`. Miss either and the utility class silently does nothing. Existing tokens: `bg-surface`, `text-text-color`, `border-border-color`, `text-muted-text`, `bg-gray-bg(-hover/-active)`, `bg-primary`/`secondary` (+ shades), `success`/`danger`/`warning`/`info`, and `folder` (the yellow used for folder icons, e.g. `fill-folder text-folder`). A single `colors` entry generates `text-*`, `bg-*` and `fill-*`.
 
 ## Folder-scoped rules
 
