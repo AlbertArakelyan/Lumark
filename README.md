@@ -68,12 +68,10 @@
 - [ ] Support Tab and Shift+Tab (for tabbing and back-tabbing)
 - [ ] Support Key Shortcuts (Ctrl+B, Ctrl+I, Ctrl+U, etc.)
 - [x] Multiple files selection
-- [ ] Support folders/workspaces
+- [x] Support folders/workspaces
 - [ ] Dark mode
 - [ ] Export to PDF
 - [ ] Support `mermaid` diagrams
-
-
 
 ## <img height="18" src="https://octicons-col.vercel.app/law/2f5bff"> License
 
