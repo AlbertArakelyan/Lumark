@@ -35,7 +35,7 @@ Before writing new markup elsewhere, scan `src/components/UI/` first and reuse w
    }, [size]);
    ```
 9. **Styling is inline Tailwind utility classes**. No CSS modules, styled-components, CSS-in-JS, or external UI libs.
-10. **Theme tokens**: use Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active`), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, etc. No hardcoded hex.
+10. **Theme tokens**: use Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active`), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, `text-folder`/`fill-folder` (the yellow used for folder icons), etc. No hardcoded hex.
 
 ## Don'ts
 

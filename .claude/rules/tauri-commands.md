@@ -46,21 +46,45 @@ fn <snake_case_name>(app: AppHandle, <named_args>) -> Result<T, String> {
 - Frontend `invoke` argument keys: `camelCase` (e.g. `fileName`). Tauri auto-converts.
 - Command names: `snake_case` (e.g. `delete_file_by_name`).
 
+## Path helpers
+
+Notes live at `app_data_dir/notes/<folder>/<note>.md` — exactly one folder deep. Never join paths by
+hand in a command:
+
+| Helper | Creates dirs? | Use for |
+|---|---|---|
+| `notes_dir(&app)` | yes (`notes/`) | listing folders |
+| `folder_dir(&app, folder_name)` | no | reading/listing inside a folder |
+| `ensure_folder_dir(&app, folder_name)` | yes | creating a folder |
+| `notes_file_path(&app, folder_name, file_name)` | no | read, delete, rename |
+| `notes_file_path_ensured(&app, folder_name, file_name)` | yes | save, add |
+
+Read paths must never materialise a folder for a mistyped name; write paths must never fail (and drop
+the user's buffer) because a folder vanished under the UI. `validate_name(name, label)` is the single
+shared guard for both folder and file names — don't add a second one.
+
+`general` is the default folder: the target of both startup migrations, otherwise ordinary. Only
+`.setup()` may guarantee it exists. Migrations share `move_md_files_into`, which never skips on
+collision (it disambiguates via `unique_md_path`) — skipping strands a note where no command can list
+it.
+
 ## File-extension contract
 
-The frontend identifies files by their **base name without the `.md` extension**. The Rust side appends:
+The frontend identifies a note by its **folder name plus base name, both without the `.md` extension**. The Rust side appends it inside the path helpers:
 
 ```rust
-let file_path = app_dir.join(file_name + ".md");
+Ok(dir.join(format!("{}.md", file_name)))
 ```
 
-`load_files` returns base names via `path.file_stem()`. Passing an already-extended name from JS produces `foo.md.md`.
+`load_files` returns base names via `path.file_stem()` and requires `extension() == Some("md")`. Passing an already-extended name from JS produces `foo.md.md`. A file name alone is no longer unique — the same base name may exist in several folders.
 
 ## Don'ts
 
 - Don't introduce file I/O in the frontend; it belongs here.
 - Don't `.unwrap()` on `io::Result` — map to `String`.
 - Don't change the extension contract without updating every command and every frontend caller in the same change.
+- Don't add a per-file command that omits `folder_name`, and don't let a folder name reach the filesystem without `validate_name`.
+- Don't support nested folders (`notes/a/b/`) without revisiting every helper and both migrations.
 - Don't make commands async unless they actually need to be.
 - Don't add `tokio`, `serde_yaml`, etc., without a real need — deps are intentionally minimal.
 

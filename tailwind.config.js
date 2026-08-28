@@ -62,6 +62,8 @@ module.exports = {
         danger: 'var(--danger)',
         warning: 'var(--warning)',
         info: 'var(--info)',
+
+        folder: 'var(--folder)',
       },
     },
   },

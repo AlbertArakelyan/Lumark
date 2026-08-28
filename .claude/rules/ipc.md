@@ -21,13 +21,17 @@ Tauri auto-converts between the parameter conventions. Don't pass `snake_case` k
 
 ## File-identifier contract
 
-The frontend passes file identifiers as **base names without the `.md` extension**. Rust appends it:
+Notes live at `notes/<folder>/<note>.md`. The frontend passes a **folder name and a base name, both without the `.md` extension**; Rust appends it inside its path helpers:
 
 ```rust
-let file_path = app_dir.join(file_name + ".md");
+Ok(dir.join(format!("{}.md", file_name)))
 ```
 
 `load_files` returns `path.file_stem()` strings, also extension-stripped. Breaking this on either side produces `foo.md.md` bugs.
+
+Every per-file command takes `folderName` alongside the file name — the same base name may exist in
+several folders, so a file name alone is not a unique identifier. Folder commands are `load_folders`,
+`add_folder`, `rename_folder_by_name`, `delete_folder_by_name`.
 
 ## Adding a new command (end-to-end)
 

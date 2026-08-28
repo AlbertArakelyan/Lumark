@@ -1,15 +1,17 @@
-import { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { SearchIcon, SquarePenIcon, XIcon } from 'lucide-react';
 import Button from '../../../UI/Button/Button';
 import Input from '../../../UI/Input/Input';
 import { useAppContext } from '../../../../contexts/AppProvider';
 
 const FilesSearch = () => {
-  const { fetchFiles, searchQuery, setSearchQuery } = useAppContext();
+  const { addFile, selectedFolder, searchQuery, setSearchQuery } = useAppContext();
 
   const [isAddingFile, setIsAddingFile] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [addError, setAddError] = useState('');
+
+  const trimmedFileName = fileName.trim();
 
   const handleAddFileClick = () => {
     setIsAddingFile(true);
@@ -18,31 +20,43 @@ const FilesSearch = () => {
   const handleCancelAddFile = () => {
     setIsAddingFile(false);
     setFileName('');
+    setAddError('');
   };
 
   const handleAddFile = async () => {
-    try {
-      if (!fileName.trim()) {
-        return;
-      }
+    if (!trimmedFileName) {
+      return;
+    }
 
-      await invoke('add_file', { fileName: fileName.trim() });
-      await fetchFiles();
+    try {
+      await addFile(trimmedFileName);
 
       setIsAddingFile(false);
       setFileName('');
+      setAddError('');
       // Clear the search so the freshly added file is visible in the list
       setSearchQuery('');
     } catch (error) {
-      console.error('Error adding file:', error);
+      setAddError(typeof error === 'string' ? error : 'Failed to add file');
     }
   };
 
-  const handleFileNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFileName(e.target.value);
+    setAddError('');
   };
 
-  const handleSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileNameKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleAddFile();
+    }
+
+    if (e.key === 'Escape') {
+      handleCancelAddFile();
+    }
+  };
+
+  const handleSearchQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
@@ -50,7 +64,7 @@ const FilesSearch = () => {
     setSearchQuery('');
   };
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       handleClearSearch();
     }
@@ -61,18 +75,21 @@ const FilesSearch = () => {
       {isAddingFile ? (
         <div className="flex flex-col items-start gap-2">
           <Input
+            autoFocus
             key="file-name-input"
             placeholder="File name"
             rounded="rounded"
             value={fileName}
+            error={addError}
             onChange={handleFileNameChange}
+            onKeyDown={handleFileNameKeyDown}
           />
-          <div className="flex items-center gap-1 w-full justify-end">
+          <div className={`flex items-center gap-1 w-full justify-end ${addError ? 'mt-4' : ''}`}>
             <Button
               size="sm"
               variant="success"
               onClick={handleAddFile}
-              disabled={!fileName.trim()}
+              disabled={!trimmedFileName}
             >
             Add
             </Button>
@@ -91,6 +108,8 @@ const FilesSearch = () => {
             key="file-search-input"
             placeholder="Search"
             rounded="rounded"
+            className="disabled:opacity-50"
+            disabled={!selectedFolder}
             icon={searchQuery ? (
               <Button
                 variant="ghost"
@@ -112,6 +131,8 @@ const FilesSearch = () => {
             variant="ghost"
             size="square-icon"
             icon={<SquarePenIcon />}
+            aria-label="Add file"
+            disabled={!selectedFolder}
             onClick={handleAddFileClick}
           />
         </div>

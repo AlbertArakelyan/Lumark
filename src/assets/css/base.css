@@ -52,6 +52,10 @@
   --danger: #e5484d; /* TODO: add shades for these colors like primary/secondary */
   --info: #3aa1ff; /* TODO: add shades for these colors like primary/secondary */
 
+  /* Kept distinct from --warning so a folder never reads as a warning state. */
+  --folder: #eab308;
+  --folder-dark: #facc15;
+
   /* neutrals */
   --text-light: #0f172a;
   --text-dark: #e5e7eb;
@@ -110,5 +114,7 @@
     --success-bg: color-mix(in srgb, var(--success) 20%, black);
     --warning-bg: color-mix(in srgb, var(--warning) 20%, black);
     --info-bg: color-mix(in srgb, var(--info) 20%, black);
+
+    --folder: var(--folder-dark);
   }
 } */

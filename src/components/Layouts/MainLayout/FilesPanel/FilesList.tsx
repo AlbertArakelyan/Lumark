@@ -2,7 +2,7 @@ import { useAppContext } from '../../../../contexts/AppProvider';
 import FileItem from './FileItem';
 
 const FilesList = () => {
-  const { filteredFiles, isSearching } = useAppContext();
+  const { filteredFiles, isSearching, selectedFolder } = useAppContext();
 
   const filesContent = (
     filteredFiles.map((file) => (
@@ -10,11 +10,17 @@ const FilesList = () => {
     ))
   );
 
-  const emptyMessage = isSearching ? 'No files match your search.' : 'No files found.';
+  const getEmptyMessage = () => {
+    if (!selectedFolder) {
+      return 'Select a folder to see its notes.';
+    }
+
+    return isSearching ? 'No files match your search.' : 'No files found.';
+  };
 
   return (
     <div className="mt-1">
-      {filesContent.length > 0 ? filesContent : <div>{emptyMessage}</div>}
+      {filesContent.length > 0 ? filesContent : <div>{getEmptyMessage()}</div>}
     </div>
   );
 };
