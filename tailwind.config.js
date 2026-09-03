@@ -59,7 +59,11 @@ module.exports = {
         'gray-bg-active': 'var(--gray-bg-active)',
 
         success: 'var(--success)',
-        danger: 'var(--danger)',
+        danger: {
+          DEFAULT: 'var(--danger)',
+          hover: 'var(--danger-hover)',
+          active: 'var(--danger-active)',
+        },
         warning: 'var(--warning)',
         info: 'var(--info)',
 
