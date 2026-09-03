@@ -70,6 +70,7 @@
 - [x] Multiple files selection
 - [x] Support folders/workspaces
 - [ ] Dark mode
+- [ ] Support images in notes
 - [ ] Export to PDF
 - [ ] Support `mermaid` diagrams
 
