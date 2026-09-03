@@ -4,6 +4,7 @@ import { IFolderItemProps } from './types';
 import { useAppContext } from '../../../../contexts/AppProvider';
 import Button from '../../../UI/Button/Button';
 import Input from '../../../UI/Input/Input';
+import ConfirmModal from '../../../UI/ConfirmModal/ConfirmModal';
 
 const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
   const { selectFolder, selectedFolder, renameFolder, deleteFolder } = useAppContext();
@@ -11,10 +12,17 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [folderName, setFolderName] = useState(folder.folder_name);
   const [renameError, setRenameError] = useState('');
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const isSelected = folder.folder_name === selectedFolder;
   const trimmedFolderName = folderName.trim();
   const isSaveDisabled = !trimmedFolderName || trimmedFolderName === folder.folder_name;
+
+  const notesWarning = folder.note_count > 0
+    ? ` The ${folder.note_count} note${folder.note_count === 1 ? '' : 's'} inside will be deleted too.`
+    : '';
+  const deleteConfirmContent = `Are you sure you want to delete the folder "${folder.folder_name}"?${notesWarning} This action cannot be undone.`;
 
   const handleFolderClick = () => {
     if (isEditingName) {
@@ -27,18 +35,20 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
   const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // Prevent the click event from bubbling up to the folder item
 
-    const notesWarning = folder.note_count > 0
-      ? ` The ${folder.note_count} note${folder.note_count === 1 ? '' : 's'} inside will be deleted too.`
-      : '';
+    setIsDeleteConfirmOpen(true);
+  };
 
-    // TODO: Replace the window.confirm with a custom modal for better UX
-    const shouldDelete = window.confirm(`Are you sure you want to delete the folder "${folder.folder_name}"?${notesWarning} This action cannot be undone.`);
+  const handleDeleteCancel = () => setIsDeleteConfirmOpen(false);
 
-    if (!shouldDelete) {
-      return;
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+
+    try {
+      await deleteFolder(folder.folder_name);
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteConfirmOpen(false);
     }
-
-    deleteFolder(folder.folder_name);
   };
 
   const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -120,35 +130,47 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
   }
 
   return (
-    <div
-      className={`group flex items-center gap-1.5 p-1.5 pr-6 hover:bg-gray-bg-hover cursor-pointer rounded-lg relative ${isSelected ? 'bg-gray-bg-active' : ''}`}
-      onClick={handleFolderClick}
-    >
-      {isSelected ? (
-        <FolderOpenIcon size={14} className="shrink-0 fill-folder text-folder" />
-      ) : (
-        <FolderIcon size={14} className="shrink-0 fill-folder text-folder" />
-      )}
-      <span className="text-sm truncate" title={folder.folder_name}>{folder.folder_name}</span>
-      <div className="absolute top-1/2 -translate-y-1/2 right-1 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
-          className="!p-0.5"
-          variant="ghost"
-          size="square-icon"
-          icon={<PencilIcon size={12} />}
-          aria-label="Rename folder"
-          onClick={handleEditClick}
-        />
-        <Button
-          className="!p-0.5"
-          variant="ghost"
-          size="square-icon"
-          icon={<Trash2Icon size={12} />}
-          aria-label="Delete folder"
-          onClick={handleDeleteClick}
-        />
+    <>
+      <div
+        className={`group flex items-center gap-1.5 p-1.5 pr-6 hover:bg-gray-bg-hover cursor-pointer rounded-lg relative ${isSelected ? 'bg-gray-bg-active' : ''}`}
+        onClick={handleFolderClick}
+      >
+        {isSelected ? (
+          <FolderOpenIcon size={14} className="shrink-0 fill-folder text-folder" />
+        ) : (
+          <FolderIcon size={14} className="shrink-0 fill-folder text-folder" />
+        )}
+        <span className="text-sm truncate" title={folder.folder_name}>{folder.folder_name}</span>
+        <div className="absolute top-1/2 -translate-y-1/2 right-1 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button
+            className="!p-0.5"
+            variant="ghost"
+            size="square-icon"
+            icon={<PencilIcon size={12} />}
+            aria-label="Rename folder"
+            onClick={handleEditClick}
+          />
+          <Button
+            className="!p-0.5"
+            variant="ghost"
+            size="square-icon"
+            icon={<Trash2Icon size={12} />}
+            aria-label="Delete folder"
+            onClick={handleDeleteClick}
+          />
+        </div>
       </div>
-    </div>
+      <ConfirmModal
+        isOpen={isDeleteConfirmOpen}
+        title="Delete folder"
+        content={deleteConfirmContent}
+        confirmText="Delete"
+        confirmVariant="danger"
+        isConfirming={isDeleting}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
+    </>
   );
 };
 
