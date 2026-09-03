@@ -83,7 +83,10 @@
   --secondary-hover: var(--secondary-700);
   --secondary-active: var(--secondary-800);
 
-  /* TODO: add hover and active colors for danger, success, warning, info (same for dark theme) */
+  --danger-hover: color-mix(in srgb, var(--danger) 85%, black);
+  --danger-active: color-mix(in srgb, var(--danger) 70%, black);
+
+  /* TODO: add hover and active colors for success, warning, info (same for dark theme) */
 
   --danger-bg: color-mix(in srgb, var(--danger) 12%, white);
   --success-bg: color-mix(in srgb, var(--success) 12%, white);
@@ -109,6 +112,9 @@
 
     --secondary-hover: var(--secondary-400);
     --secondary-active: var(--secondary-300);
+
+    --danger-hover: color-mix(in srgb, var(--danger) 85%, white);
+    --danger-active: color-mix(in srgb, var(--danger) 70%, white);
 
     --danger-bg: color-mix(in srgb, var(--danger) 20%, black);
     --success-bg: color-mix(in srgb, var(--success) 20%, black);
