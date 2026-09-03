@@ -164,6 +164,7 @@ Skills auto-trigger when a task matches their description. Available in this rep
 - `eslint-fixer` — runs `yarn lint`, applies safe `--fix`, hand-fixes the remainder respecting the empty-dep-array invariants in `AppProvider.tsx` and `Editor.tsx`.
 - `issue-starter` — given a GitHub issue number, runs `gh issue view`, creates the branch in `<issue#>-<kebab-summary>` form, and summarises the scope (CONTRIBUTING.md steps 1–3).
 - `codemirror-extension-adder` — adds CodeMirror 6 extensions to the editor following the static-vs-reactive (`Compartment`) decision and the lifecycle invariants in `src/components/Editor/CLAUDE.md`.
+- `release-notes` — drafts the human-written bullets for a GitHub release, matching the repo's short plain-spoken style and enforcing the no-em-dash / no-AI-slop writing rules.
 
 ## Rule catalog (reference only — not auto-loaded)
 
