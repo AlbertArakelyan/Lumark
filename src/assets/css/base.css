@@ -72,6 +72,8 @@
 
 /* ===== Light ===== */
 :root {
+  color-scheme: light;
+
   --text-color: var(--text-light);
   --surface: var(--surface-light);
   --muted-text: var(--muted-light);
@@ -98,29 +100,34 @@
   --gray-bg-active: var(--gray-bg-light-active);
 }
 
-/* TODO: support in the future */
 /* ===== Dark ===== */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --text-color: var(--text-dark);
-    --surface: var(--surface-dark);
-    --muted-text: var(--muted-dark);
-    --border-color: var(--border-dark);
+/* Driven by the `data-theme` attribute AppProvider sets on <html>, not by
+   prefers-color-scheme, so the in-app toggle wins over the OS setting. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
 
-    --primary-hover: var(--primary-400);
-    --primary-active: var(--primary-300);
+  --text-color: var(--text-dark);
+  --surface: var(--surface-dark);
+  --muted-text: var(--muted-dark);
+  --border-color: var(--border-dark);
 
-    --secondary-hover: var(--secondary-400);
-    --secondary-active: var(--secondary-300);
+  --primary-hover: var(--primary-400);
+  --primary-active: var(--primary-300);
 
-    --danger-hover: color-mix(in srgb, var(--danger) 85%, white);
-    --danger-active: color-mix(in srgb, var(--danger) 70%, white);
+  --secondary-hover: var(--secondary-400);
+  --secondary-active: var(--secondary-300);
 
-    --danger-bg: color-mix(in srgb, var(--danger) 20%, black);
-    --success-bg: color-mix(in srgb, var(--success) 20%, black);
-    --warning-bg: color-mix(in srgb, var(--warning) 20%, black);
-    --info-bg: color-mix(in srgb, var(--info) 20%, black);
+  --danger-hover: color-mix(in srgb, var(--danger) 85%, white);
+  --danger-active: color-mix(in srgb, var(--danger) 70%, white);
 
-    --folder: var(--folder-dark);
-  }
-} */
+  --danger-bg: color-mix(in srgb, var(--danger) 20%, black);
+  --success-bg: color-mix(in srgb, var(--success) 20%, black);
+  --warning-bg: color-mix(in srgb, var(--warning) 20%, black);
+  --info-bg: color-mix(in srgb, var(--info) 20%, black);
+
+  --gray-bg: var(--gray-bg-dark);
+  --gray-bg-hover: var(--gray-bg-dark-hover);
+  --gray-bg-active: var(--gray-bg-dark-active);
+
+  --folder: var(--folder-dark);
+}

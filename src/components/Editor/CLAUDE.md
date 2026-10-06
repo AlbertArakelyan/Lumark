@@ -22,7 +22,8 @@ The editor mounts **CodeMirror 6 imperatively** alongside a **react-markdown** p
 ## Preview pane
 
 - Renders through `<ReactMarkdown>` with `remark-gfm`, `rehype-raw`, `rehype-highlight`.
-- Styling comes from `github-markdown-css` (light variant currently hard-coded) and `highlight.js/styles/github.css`. The light-theme imports are noted in inline comments as future-dark-mode targets — don't rip them out without a dark-mode story.
+- Styling comes from `github-markdown-css` and `highlight.js/styles/github(-dark).css`, imported as `?inline` strings and swapped in a `<style>` tag by `theme`. Don't go back to the combined `github-markdown.css` — it only follows `prefers-color-scheme`, so it ignores the in-app toggle.
+- The CodeMirror theme lives in a module-level `themeCompartment` (`githubLight` / `githubDark`), reconfigured by a `[theme]` effect — the reference pattern for any other prop-driven extension.
 - If you add a new remark/rehype plugin, add it to the appropriate array — don't introduce a custom markdown pipeline.
 
 ## EditorMode

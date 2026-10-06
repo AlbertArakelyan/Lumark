@@ -40,6 +40,12 @@ When touching `content`, watch for:
 - **No explicit save**: every keystroke schedules a write. Don't introduce a Save button unless you gate autosave behind it.
 - **Known limitation**: a pending save younger than 500 ms is discarded on switch, because the cleanup clears the timer.
 
+### Theme
+
+`theme` is persisted in `localStorage` (a per-device UI preference, not user data, so no IPC). A
+`useLayoutEffect([theme])` writes `data-theme` on `<html>` before paint, so there's no light flash.
+It never touches `content` and is independent of the four effects above.
+
 ## Folder scoping
 
 `files` only ever holds the selected folder's notes, so `filteredFiles` is already folder-scoped

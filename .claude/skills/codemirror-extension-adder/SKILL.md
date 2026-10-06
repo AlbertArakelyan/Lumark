@@ -119,7 +119,7 @@ Then append `python()` to `extensions:[]`. Note: Lumark is a Markdown editor —
 
 ## Theme tokens
 
-The current theme is `@fsegurai/codemirror-theme-github-light`. The dark variant `@fsegurai/codemirror-theme-github-dark` is already in `package.json` and imported in a comment for future dark-mode work — wire it via Compartment when dark mode lands.
+The theme is already wired through a module-level `themeCompartment` in `Editor.tsx` (`githubLight` / `githubDark`, driven by `theme` from `AppContext`). Reconfigure that compartment rather than adding a second theme extension.
 
 ## Verification
 

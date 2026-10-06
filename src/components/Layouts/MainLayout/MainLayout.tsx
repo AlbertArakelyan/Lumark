@@ -4,6 +4,7 @@ import FoldersPanel from './FoldersPanel/FoldersPanel';
 import FilesPanel from './FilesPanel/FilesPanel';
 import EditorMode from '../../Editor/EditorMode';
 import ToolbarButton from '../../UI/ToolbarButton/ToolbarButton';
+import ThemeToggle from './ThemeToggle/ThemeToggle';
 
 const MainLayout: FC<PropsWithChildren> = ({ children }) => {
   const [areSidePanelsCollapsed, setAreSidePanelsCollapsed] = useState(false);
@@ -22,7 +23,10 @@ const MainLayout: FC<PropsWithChildren> = ({ children }) => {
         >
           {areSidePanelsCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
         </ToolbarButton>
-        <EditorMode />
+        <div className="flex items-center gap-1">
+          <EditorMode />
+          <ThemeToggle />
+        </div>
       </header>
       <div className="flex flex-1 min-h-0 overflow-hidden">
         <aside className={`w-32 shrink-0 min-h-0 border-r border-border-color ${sidePanelsVisibilityClassName}`}>
