@@ -1,26 +1,36 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { EditorView } from '@codemirror/view';
-import { EditorState } from '@codemirror/state';
+import { Compartment, EditorState } from '@codemirror/state';
 import { markdown } from '@codemirror/lang-markdown';
 import { basicSetup } from 'codemirror';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
-import { githubLight } from '@fsegurai/codemirror-theme-github-light'; // When dark theme is set up change with @fsegurai/codemirror-theme-github-dark
-import 'highlight.js/styles/github.css';
-import 'github-markdown-css/github-markdown-light.css'; // TODO: remove light theme and leave ordinary one, for supporting both themes.
+import { githubLight } from '@fsegurai/codemirror-theme-github-light';
+import { githubDark } from '@fsegurai/codemirror-theme-github-dark';
+// Inlined as strings and swapped in a <style> tag: the combined github-markdown.css
+// only follows prefers-color-scheme, so it can't track the in-app toggle.
 // Reference: https://github.com/sindresorhus/github-markdown-css
+import markdownLightCss from 'github-markdown-css/github-markdown-light.css?inline';
+import markdownDarkCss from 'github-markdown-css/github-markdown-dark.css?inline';
+import highlightLightCss from 'highlight.js/styles/github.css?inline';
+import highlightDarkCss from 'highlight.js/styles/github-dark.css?inline';
 
 import { useAppContext } from '../../contexts/AppProvider.tsx';
 import { EditorModeEnum } from '../../types/editor/editorEnums.ts';
+import { ThemeEnum } from '../../types/theme/themeEnums.ts';
+
+const themeCompartment = new Compartment();
+
+const getEditorTheme = (theme: ThemeEnum) => (theme === ThemeEnum.DARK ? githubDark : githubLight);
 
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
 // inside a new Editor.tsx (Editor2.tsx) component and compare
 // Consider last published 2 years ago, meanwhile code mirror is actively being updated
 
 const Editor = () => {
-  const { content, setContent, editorMode, selectedFile } = useAppContext();
+  const { content, setContent, editorMode, selectedFile, theme } = useAppContext();
 
   const [isEditorContentSetInitially, setIsEditorContentSetInitially] = useState(false);
 
@@ -34,7 +44,7 @@ const Editor = () => {
           basicSetup,
           EditorView.lineWrapping,
           markdown(),
-          githubLight,
+          themeCompartment.of(getEditorTheme(theme)),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {
               setContent(update.state.doc.toString());
@@ -74,13 +84,22 @@ const Editor = () => {
   }, [content, isEditorContentSetInitially]);
 
   useEffect(() => {
-    console.log('selectedFile', selectedFile);
-
     setIsEditorContentSetInitially(false);
   }, [selectedFile]);
 
+  useEffect(() => {
+    editorRef.current?.dispatch({
+      effects: themeCompartment.reconfigure(getEditorTheme(theme)),
+    });
+  }, [theme]);
+
+  const previewCss = theme === ThemeEnum.DARK
+    ? markdownDarkCss + highlightDarkCss
+    : markdownLightCss + highlightLightCss;
+
   return (
     <>
+      <style>{previewCss}</style>
       <div className="flex items-start justify-between gap-2 p-2">
         <div className={`w-1/2 min-w-0 ${editorMode === EditorModeEnum.PREVIEW ? 'hidden' : ''} ${editorMode === EditorModeEnum.EDIT ? '!w-full' : ''}`}>
           <div id="editor-container"></div>

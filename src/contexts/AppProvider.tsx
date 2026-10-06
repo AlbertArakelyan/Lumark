@@ -1,6 +1,7 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { EditorModeEnum } from '../types/editor/editorEnums.ts';
+import { ThemeEnum } from '../types/theme/themeEnums.ts';
 import { IFileInfo } from '../types/file/fileTypes.ts';
 import { IFolderInfo } from '../types/folder/folderTypes.ts';
 import useDebounce from '../hooks/useDebounce.ts';
@@ -8,6 +9,22 @@ import useDebounce from '../hooks/useDebounce.ts';
 const SEARCH_DEBOUNCE_DELAY = 300;
 const SAVE_DEBOUNCE_DELAY = 500;
 const DEFAULT_FOLDER_NAME = 'general';
+const THEME_STORAGE_KEY = 'lumark-theme';
+
+// A saved choice wins; on first launch fall back to the OS preference.
+const getInitialTheme = (): ThemeEnum => {
+  try {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+
+    if (savedTheme === ThemeEnum.LIGHT || savedTheme === ThemeEnum.DARK) {
+      return savedTheme;
+    }
+  } catch (error) {
+    console.warn('Failed to read saved theme:', error);
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? ThemeEnum.DARK : ThemeEnum.LIGHT;
+};
 
 // Identity of the buffer currently held in `content`. The autosave effect writes
 // only when this matches the live selection, so a folder or file switch can
@@ -21,6 +38,8 @@ interface IAppContext {
   setContent: Dispatch<SetStateAction<string>>;
   editorMode: EditorModeEnum;
   handleEditorModeChange: (mode: EditorModeEnum) => void;
+  theme: ThemeEnum;
+  toggleTheme: () => void;
   folders: IFolderInfo[];
   selectedFolder: string | null;
   selectFolder: (folderName: string) => void;
@@ -46,6 +65,7 @@ export const AppContext = createContext<IAppContext>({} as IAppContext);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState('');
   const [editorMode, setEditorMode] = useState<EditorModeEnum>(EditorModeEnum.SPLIT);
+  const [theme, setTheme] = useState<ThemeEnum>(getInitialTheme);
   const [folders, setFolders] = useState<IFolderInfo[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [files, setFiles] = useState<IFileInfo[]>([]);
@@ -70,6 +90,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const handleEditorModeChange = (mode: EditorModeEnum) => {
     setEditorMode(mode);
+  };
+
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK));
   };
 
   const fetchFolders = async () => {
@@ -231,6 +255,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Layout effect so the attribute lands before the first paint and a dark-theme
+  // user never sees a light flash on startup.
+  useLayoutEffect(() => {
+    document.documentElement.dataset.theme = theme;
+
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch (error) {
+      console.warn('Failed to save theme:', error);
+    }
+  }, [theme]);
+
   useEffect(() => {
     const bootstrapFolders = async () => {
       const loadedFolders = await fetchFolders();
@@ -341,6 +377,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setContent,
     editorMode,
     handleEditorModeChange,
+    theme,
+    toggleTheme,
     folders,
     selectedFolder,
     selectFolder,
