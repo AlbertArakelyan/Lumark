@@ -69,7 +69,7 @@
 - [ ] Support Key Shortcuts (Ctrl+B, Ctrl+I, Ctrl+U, etc.)
 - [x] Multiple files selection
 - [x] Support folders/workspaces
-- [ ] Dark mode
+- [x] Dark mode
 - [ ] Support images in notes
 - [ ] Export to PDF
 - [ ] Support `mermaid` diagrams
