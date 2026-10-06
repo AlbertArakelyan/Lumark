@@ -84,6 +84,7 @@ There is one React context: `src/contexts/AppProvider.tsx`. It owns the *entire*
 - `folders` — the folder list loaded from Rust; `selectedFolder` — the open folder's name
 - `files` — the file list for the **selected folder only**
 - `selectedFile` — the currently open file's base name
+- `theme` (`LIGHT` | `DARK` from `src/types/theme/themeEnums.ts`) / `toggleTheme` — persisted in `localStorage`, first launch follows the OS
 - async ops: `fetchFolders`, `selectFolder`, `addFolder`, `renameFolder`, `deleteFolder`, `fetchFiles`, `selectFile`, `addFile`, `deleteFile`, `renameFile`
 
 Consume via `useAppContext()`. There is no Redux/Zustand/etc.
@@ -105,7 +106,7 @@ Be careful when introducing new effects that touch `content` — they can race w
 ### Editor component
 `src/components/Editor/Editor.tsx` runs two parallel views from the same `content` string:
 - **Edit pane**: a CodeMirror 6 `EditorView` constructed imperatively against `#editor-container`. The constructor effect has an empty dep array so the editor is created once; an `isEditorContentSetInitially` flag is used to push `content` into CodeMirror only on the initial mount per selected file, and is reset whenever `selectedFile` changes. Updates flow back via the `updateListener` calling `setContent`.
-- **Preview pane**: `react-markdown` with `remark-gfm` + `rehype-raw` + `rehype-highlight`, styled by `github-markdown-css` and `highlight.js/styles/github.css`.
+- **Preview pane**: `react-markdown` with `remark-gfm` + `rehype-raw` + `rehype-highlight`, styled by `github-markdown-css` and `highlight.js/styles/github(-dark).css`, swapped by `theme`.
 
 The two panes are shown/hidden via Tailwind classes driven by `editorMode`; both remain mounted in `SPLIT` mode.
 
@@ -140,6 +141,8 @@ Pattern to follow exactly (see `src/components/UI/Button/`, `src/components/UI/I
 Tailwind v4 via `@tailwindcss/vite`, but there **is** a v3-style `tailwind.config.js` (CommonJS) at the repo root, loaded explicitly by `@config "../../../tailwind.config.js"` in `src/assets/css/index.css`. That file is where the semantic colour names live. Note it is `.js`, not `.ts`.
 
 Theme tokens therefore take **two edits** — the CSS variable in `src/assets/css/base.css` and the Tailwind colour mapping in `tailwind.config.js`. Miss either and the utility class silently does nothing. Existing tokens: `bg-surface`, `text-text-color`, `border-border-color`, `text-muted-text`, `bg-gray-bg(-hover/-active)`, `bg-primary`/`secondary` (+ shades), `success`/`danger`/`warning`/`info`, and `folder` (the yellow used for folder icons, e.g. `fill-folder text-folder`). A single `colors` entry generates `text-*`, `bg-*` and `fill-*`.
+
+**Dark mode**: `AppProvider` sets `data-theme` on `<html>`, and `base.css` redefines the semantic variables under `:root[data-theme="dark"]`. A new theme-dependent token must be set in **both** the light `:root` block and the dark block. Use semantic tokens rather than raw `gray-*`/`white` utilities, or the element won't follow the theme.
 
 ## Folder-scoped rules
 

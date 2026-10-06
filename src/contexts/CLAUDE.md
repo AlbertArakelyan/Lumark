@@ -43,6 +43,12 @@ When adding effects that read or write `content`, watch out for:
 - **No explicit save action**: every keystroke schedules a write. Don't introduce a "Save" button unless you also gate the autosave behind it.
 - **Known limitation**: switching folder or file discards a pending save younger than 500 ms, because the effect cleanup clears the timer. A flush-before-switch is a separate change.
 
+### Theme
+
+`theme` is persisted in `localStorage` (a per-device UI preference, not user data, so no IPC). A
+`useLayoutEffect([theme])` writes `data-theme` on `<html>` before paint, so there's no light flash.
+It never touches `content` and is independent of the four effects above.
+
 ## Folder scoping
 
 `files` only ever holds the selected folder's notes, so `filteredFiles` is already folder-scoped
