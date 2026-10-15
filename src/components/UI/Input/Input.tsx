@@ -17,26 +17,26 @@ const Input: FC<IInputProps> = ({
   const inputSize = useMemo(() => {
     if (icon) {
       const iconSizeMapping: Record<InputSizeType, string> = {
-        xs: `${iconPosition === 'left' ? 'pl-8 pr-2' : 'pl-2 pr-8'} py-0.5 text-xs`,
-        sm: `${iconPosition === 'left' ? 'pl-8 pr-3' : 'pl-3 pr-8'} py-1 text-sm`,
-        md: `${iconPosition === 'left' ? 'pl-8 pr-4' : 'pl-4 pr-8'} py-1.5 text-base`,
-        lg: `${iconPosition === 'left' ? 'pl-8 pr-5' : 'pl-5 pr-8'} py-2 text-lg`,
-        xl: `${iconPosition === 'left' ? 'pl-8 pr-6' : 'pl-6 pr-8'} py-3 text-xl`,
+        xs: `${iconPosition === 'left' ? 'pl-7 pr-2' : 'pl-2 pr-7'} h-6 text-xs`,
+        sm: `${iconPosition === 'left' ? 'pl-8 pr-3' : 'pl-3 pr-8'} h-8 text-sm`,
+        md: `${iconPosition === 'left' ? 'pl-8 pr-4' : 'pl-4 pr-8'} h-9 text-sm`,
+        lg: `${iconPosition === 'left' ? 'pl-9 pr-5' : 'pl-5 pr-9'} h-10 text-base`,
+        xl: `${iconPosition === 'left' ? 'pl-10 pr-6' : 'pl-6 pr-10'} h-12 text-lg`,
       };
 
       return iconSizeMapping[inputElSize] || iconSizeMapping.md;
     }
 
     const sizeMapping: Record<InputSizeType, string> = {
-      xs: 'px-2 py-0.5 text-xs', // not stable, need to adjust padding to accommodate icon
-      sm: 'px-3 py-1 text-sm',
-      md: 'px-4 py-1.5 text-base',
-      lg: 'px-5 py-2 text-lg',
-      xl: 'px-6 py-3 text-xl', // not stable, need to adjust padding to accommodate icon
+      xs: 'px-2 h-6 text-xs',
+      sm: 'px-3 h-8 text-sm',
+      md: 'px-4 h-9 text-sm',
+      lg: 'px-5 h-10 text-base',
+      xl: 'px-6 h-12 text-lg',
     };
 
     return sizeMapping[inputElSize] || sizeMapping.md;
-  }, [inputElSize]);
+  }, [icon, iconPosition, inputElSize]);
 
   const inputRounded = useMemo(() => {
     const roundedMapping: Record<InputRoundedType, string> = {
@@ -47,32 +47,30 @@ const Input: FC<IInputProps> = ({
     return roundedMapping[rounded] || roundedMapping.default;
   }, [rounded]);
 
-  const inputRingAndBorderColor = useMemo(() => {
+  // Flat: state is carried by the border colour alone, no focus ring.
+  const inputBorderColor = useMemo(() => {
     if (error) {
-      return 'focus:ring-danger/20 border-danger hover:ring-danger/20';
+      return 'border-danger focus:border-danger';
     }
 
-    // if (isDirty) {
-    //   return 'focus:ring-success/20 focus:ring-success focus:border-success hover:ring-success/20';
-    // }
-
-    return 'focus:ring-primary/20 focus:border-primary hover:ring-primary/20';
+    return 'border-border-color hover:border-border-strong focus:border-primary';
   }, [error]);
 
   return (
     <div className={`w-full flex items-center relative ${wrapperClassName}`}>
       {/* TODO: Support label */}
       <input
-        className={`outline-none border border-border-color hover:ring-3 focus:ring-3 transition w-full ${inputRingAndBorderColor} ${inputSize} ${inputRounded} ${className}`}
+        className={`w-full min-w-0 outline-none border bg-surface text-text-color placeholder:text-muted-text/70 transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${inputBorderColor} ${inputSize} ${inputRounded} ${className}`}
+        aria-invalid={error ? true : undefined}
         {...props}
       />
       {icon && (
-        <div className={`absolute top-1/2 transform -translate-y-1/2 ${iconPosition === 'left' ? 'left-2' : 'right-2'}`}>
+        <div className={`absolute top-1/2 -translate-y-1/2 flex items-center text-muted-text ${iconPosition === 'left' ? 'left-2' : 'right-2'}`}>
           {icon}
         </div>
       )}
       {error && (
-        <p className="text-danger text-sm absolute top-full mt-1">{error}</p>
+        <p className="text-danger text-xs absolute top-full mt-1">{error}</p>
       )}
     </div>
   );

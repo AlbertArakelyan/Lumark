@@ -34,9 +34,9 @@ const ConfirmModal: FC<IConfirmModalProps> = ({
       <Button
         type="button"
         size="sm"
-        variant="ghost"
+        variant="outline"
         disabled={isConfirming}
-        className={`border border-border-color ${cancelButtonClassName}`}
+        className={cancelButtonClassName}
         onClick={handleClose}
       >
         {cancelText}
