@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useState } from 'react';
-import { BanIcon, CheckIcon, FolderIcon, FolderOpenIcon, PencilIcon, Trash2Icon } from 'lucide-react';
+import { CheckIcon, FolderIcon, FolderOpenIcon, PencilIcon, Trash2Icon, XIcon } from 'lucide-react';
 import { IFolderItemProps } from './types';
 import { useAppContext } from '../../../../contexts/AppProvider';
 import Button from '../../../UI/Button/Button';
@@ -110,8 +110,8 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
           <Button
             variant="ghost"
             size="square-icon"
-            className="text-success"
-            icon={<CheckIcon size={16} />}
+            className="!text-primary"
+            icon={<CheckIcon size={14} />}
             aria-label="Save folder name"
             disabled={isSaveDisabled}
             onClick={handleSaveEdit}
@@ -119,8 +119,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
           <Button
             variant="ghost"
             size="square-icon"
-            className="text-danger"
-            icon={<BanIcon size={16} />}
+            icon={<XIcon size={14} />}
             aria-label="Cancel renaming"
             onClick={handleCancelEdit}
           />
@@ -132,7 +131,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
   return (
     <>
       <div
-        className={`group flex items-center gap-1.5 p-1.5 pr-6 hover:bg-gray-bg-hover cursor-pointer rounded-lg relative ${isSelected ? 'bg-gray-bg-active' : ''}`}
+        className={`group relative flex items-center gap-1.5 px-2 py-1.5 cursor-pointer rounded-md transition-colors ${isSelected ? 'bg-gray-bg-active text-primary' : 'hover:bg-gray-bg-hover'}`}
         onClick={handleFolderClick}
       >
         {isSelected ? (
@@ -140,22 +139,25 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
         ) : (
           <FolderIcon size={14} className="shrink-0 fill-folder text-folder" />
         )}
-        <span className="text-sm truncate" title={folder.folder_name}>{folder.folder_name}</span>
-        <div className="absolute top-1/2 -translate-y-1/2 right-1 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className={`text-sm truncate ${isSelected ? 'font-medium' : ''}`} title={folder.folder_name}>{folder.folder_name}</span>
+        {/* The backing matches the row so the actions cover a long name instead of colliding with it. */}
+        <div className={`absolute top-1/2 -translate-y-1/2 right-1 flex items-center rounded-md opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity ${isSelected ? 'bg-gray-bg-active' : 'bg-gray-bg-hover'}`}>
           <Button
             className="!p-0.5"
             variant="ghost"
             size="square-icon"
             icon={<PencilIcon size={12} />}
             aria-label="Rename folder"
+            title="Rename"
             onClick={handleEditClick}
           />
           <Button
             className="!p-0.5"
-            variant="ghost"
+            variant="ghost-danger"
             size="square-icon"
             icon={<Trash2Icon size={12} />}
             aria-label="Delete folder"
+            title="Delete"
             onClick={handleDeleteClick}
           />
         </div>

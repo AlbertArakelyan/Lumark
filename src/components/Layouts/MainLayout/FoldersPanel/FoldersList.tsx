@@ -11,8 +11,8 @@ const FoldersList = () => {
   );
 
   return (
-    <div className="mt-1">
-      {foldersContent.length > 0 ? foldersContent : <div className="text-sm text-muted-text">No folders found.</div>}
+    <div className="mt-1 flex flex-col gap-0.5">
+      {foldersContent.length > 0 ? foldersContent : <p className="px-2 py-4 text-xs text-muted-text">No folders yet.</p>}
     </div>
   );
 };

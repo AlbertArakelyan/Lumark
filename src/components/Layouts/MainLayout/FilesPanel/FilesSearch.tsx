@@ -77,28 +77,28 @@ const FilesSearch = () => {
           <Input
             autoFocus
             key="file-name-input"
-            placeholder="File name"
+            placeholder="Note name"
             rounded="rounded"
             value={fileName}
             error={addError}
             onChange={handleFileNameChange}
             onKeyDown={handleFileNameKeyDown}
           />
-          <div className={`flex items-center gap-1 w-full justify-end ${addError ? 'mt-4' : ''}`}>
+          <div className={`flex items-center gap-1.5 w-full justify-end ${addError ? 'mt-4' : ''}`}>
             <Button
               size="sm"
-              variant="success"
-              onClick={handleAddFile}
-              disabled={!trimmedFileName}
+              variant="outline"
+              onClick={handleCancelAddFile}
             >
-            Add
+              Cancel
             </Button>
             <Button
               size="sm"
-              variant="danger"
-              onClick={handleCancelAddFile}
+              variant="primary"
+              onClick={handleAddFile}
+              disabled={!trimmedFileName}
             >
-            Cancel
+              Add note
             </Button>
           </div>
         </div>
@@ -116,22 +116,24 @@ const FilesSearch = () => {
                 size="square-icon"
                 rounded="circle"
                 className="!p-0.5"
-                icon={<XIcon size={16} />}
+                icon={<XIcon size={14} />}
                 aria-label="Clear search"
                 onClick={handleClearSearch}
               />
             ) : (
-              <SearchIcon size={16} className="text-muted-text" />
+              <SearchIcon size={14} />
             )}
             value={searchQuery}
             onChange={handleSearchQueryChange}
             onKeyDown={handleSearchKeyDown}
           />
           <Button
-            variant="ghost"
+            variant="outline"
             size="square-icon"
-            icon={<SquarePenIcon />}
+            className="!p-0 h-8 w-8"
+            icon={<SquarePenIcon size={16} />}
             aria-label="Add file"
+            title="New note"
             disabled={!selectedFolder}
             onClick={handleAddFileClick}
           />

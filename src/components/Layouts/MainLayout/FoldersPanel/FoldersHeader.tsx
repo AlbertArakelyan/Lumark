@@ -1,5 +1,5 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
-import { BanIcon, CheckIcon, FolderPlusIcon } from 'lucide-react';
+import { CheckIcon, FolderPlusIcon, XIcon } from 'lucide-react';
 import Button from '../../../UI/Button/Button';
 import Input from '../../../UI/Input/Input';
 import { useAppContext } from '../../../../contexts/AppProvider';
@@ -72,8 +72,8 @@ const FoldersHeader = () => {
             <Button
               variant="ghost"
               size="square-icon"
-              className="text-success"
-              icon={<CheckIcon size={16} />}
+              className="!text-primary"
+              icon={<CheckIcon size={14} />}
               aria-label="Save folder name"
               disabled={!trimmedFolderName}
               onClick={handleAddFolder}
@@ -81,22 +81,22 @@ const FoldersHeader = () => {
             <Button
               variant="ghost"
               size="square-icon"
-              className="text-danger"
-              icon={<BanIcon size={16} />}
+              icon={<XIcon size={14} />}
               aria-label="Cancel adding folder"
               onClick={handleCancelAddFolder}
             />
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-between gap-1">
-          <h2 className="text-sm text-muted-text truncate">Folders</h2>
+        <div className="flex items-center justify-between gap-1 h-8 pl-2">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-text truncate">Folders</h2>
           <Button
-            className="!p-0.5"
+            className="!p-1"
             variant="ghost"
             size="square-icon"
-            icon={<FolderPlusIcon size={18} />}
+            icon={<FolderPlusIcon size={16} />}
             aria-label="Add folder"
+            title="New folder"
             onClick={handleAddFolderClick}
           />
         </div>

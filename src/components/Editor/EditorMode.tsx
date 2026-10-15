@@ -28,13 +28,14 @@ const EditorMode = () => {
       onClick={() => handleEditorModeChange(button.value)}
       title={button.label}
       aria-label={button.label}
+      className="!p-1"
     >
       {button.icon}
     </ToolbarButton>
   ));
 
   return (
-    <div className="flex w-max items-center gap-1">
+    <div className="flex w-max items-center gap-0.5 p-0.5 border border-border-color rounded-lg" role="group" aria-label="Editor mode">
       {buttonsContent}
     </div>
   );
