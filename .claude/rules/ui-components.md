@@ -35,7 +35,8 @@ Before writing new markup elsewhere, scan `src/components/UI/` first and reuse w
    }, [size]);
    ```
 9. **Styling is inline Tailwind utility classes**. No CSS modules, styled-components, CSS-in-JS, or external UI libs.
-10. **Theme tokens**: use Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active`), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, `text-folder`/`fill-folder` (the yellow used for folder icons), etc. No hardcoded hex.
+10. **Theme tokens**: use Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active`), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, `text-folder`/`fill-folder` (the gold used for folder icons), `text-on-primary`, `border-border-strong`, etc. No hardcoded hex.
+11. **Flat style**: no shadows and no focus rings, only `focus-visible` outlines. Button variants: `primary` for the main action, `outline` for cancel, `ghost` / `ghost-danger` for icon actions, and filled `danger` only to confirm a destructive action.
 
 ## Don'ts
 
