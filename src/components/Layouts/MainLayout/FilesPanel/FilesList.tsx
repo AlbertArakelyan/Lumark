@@ -19,8 +19,10 @@ const FilesList = () => {
   };
 
   return (
-    <div className="mt-1">
-      {filesContent.length > 0 ? filesContent : <div>{getEmptyMessage()}</div>}
+    <div className="mt-1 flex flex-col gap-0.5">
+      {filesContent.length > 0 ? filesContent : (
+        <p className="px-2.5 py-6 text-sm text-center text-muted-text">{getEmptyMessage()}</p>
+      )}
     </div>
   );
 };

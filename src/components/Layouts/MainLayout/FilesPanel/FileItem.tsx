@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useState } from 'react';
-import { BanIcon, CheckIcon, PencilIcon, Trash2Icon } from 'lucide-react';
+import { CheckIcon, PencilIcon, Trash2Icon, XIcon } from 'lucide-react';
 import { IFileItemProps } from './types';
 import { useAppContext } from '../../../../contexts/AppProvider';
 import Button from '../../../UI/Button/Button';
@@ -15,6 +15,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const isSelected = file.file_name === selectedFile;
   const epoch = Number(file.date_created);
   const trimmedFileName = fileName.trim();
   const isSaveDisabled = !trimmedFileName || trimmedFileName === file.file_name;
@@ -95,7 +96,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
     <>
       <div
         key={file.file_name}
-        className={`group flex flex-col gap-y-0.5 p-2 hover:bg-gray-bg-hover cursor-pointer rounded-xl relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-border-color/50 after:content-[''] ${file.file_name === selectedFile ? 'bg-gray-bg-active' : ''}`}
+        className={`group relative flex flex-col gap-y-0.5 px-2.5 py-2 cursor-pointer rounded-lg transition-colors ${isSelected ? 'bg-gray-bg-active' : 'hover:bg-gray-bg-hover'}`}
         onClick={handleFileClick}
       >
         {isEditingName ? (
@@ -114,8 +115,8 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
             <Button
               variant="ghost"
               size="square-icon"
-              className="text-success"
-              icon={<CheckIcon size={20} />}
+              className="!text-primary"
+              icon={<CheckIcon size={16} />}
               aria-label="Save file name"
               disabled={isSaveDisabled}
               onClick={handleSaveEdit}
@@ -123,34 +124,34 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
             <Button
               variant="ghost"
               size="square-icon"
-              className="text-danger"
-              icon={<BanIcon size={20} />}
+              icon={<XIcon size={16} />}
               aria-label="Cancel renaming"
               onClick={handleCancelEdit}
             />
           </div>
         ) : (
-          <h3 className="font-medium truncate pr-7">{file.file_name}</h3>
+          <h3 className={`text-sm font-medium truncate ${isSelected ? 'text-primary' : ''}`} title={file.file_name}>{file.file_name}</h3>
         )}
-        <p className={`text-sm text-muted-text pr-7 ${renameError ? 'mt-4' : ''}`}>
-          Created: <span>{new Date(epoch * 1000).toLocaleDateString()}</span>
+        <p className={`text-xs text-muted-text ${renameError ? 'mt-4' : ''}`}>
+          {new Date(epoch * 1000).toLocaleDateString()}
         </p>
         {!isEditingName && (
-          <div className="absolute top-1/2 -translate-y-1/2 right-2 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          // The backing matches the row so the actions cover a long title instead of colliding with it.
+          <div className={`absolute top-1/2 -translate-y-1/2 right-1.5 flex items-center gap-0.5 p-0.5 rounded-md opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity ${isSelected ? 'bg-gray-bg-active' : 'bg-gray-bg-hover'}`}>
             <Button
-              className="!p-0.5"
               variant="ghost"
               size="square-icon"
               icon={<PencilIcon size={14} />}
               aria-label="Rename file"
+              title="Rename"
               onClick={handleEditClick}
             />
             <Button
-              className="!p-0.5"
-              variant="ghost"
+              variant="ghost-danger"
               size="square-icon"
               icon={<Trash2Icon size={14} />}
               aria-label="Delete file"
+              title="Delete"
               onClick={handleDeleteClick}
             />
           </div>

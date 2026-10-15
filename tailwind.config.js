@@ -48,6 +48,8 @@ module.exports = {
         surface: 'var(--surface)',
         'muted-text': 'var(--muted-text)',
         'border-color': 'var(--border-color)',
+        'border-strong': 'var(--border-strong)',
+        'on-primary': 'var(--on-primary)',
 
         'danger-bg': 'var(--danger-bg)',
         'success-bg': 'var(--success-bg)',
@@ -58,14 +60,26 @@ module.exports = {
         'gray-bg-hover': 'var(--gray-bg-hover)',
         'gray-bg-active': 'var(--gray-bg-active)',
 
-        success: 'var(--success)',
+        success: {
+          DEFAULT: 'var(--success)',
+          hover: 'var(--success-hover)',
+          active: 'var(--success-active)',
+        },
         danger: {
           DEFAULT: 'var(--danger)',
           hover: 'var(--danger-hover)',
           active: 'var(--danger-active)',
         },
-        warning: 'var(--warning)',
-        info: 'var(--info)',
+        warning: {
+          DEFAULT: 'var(--warning)',
+          hover: 'var(--warning-hover)',
+          active: 'var(--warning-active)',
+        },
+        info: {
+          DEFAULT: 'var(--info)',
+          hover: 'var(--info-hover)',
+          active: 'var(--info-active)',
+        },
 
         folder: 'var(--folder)',
       },

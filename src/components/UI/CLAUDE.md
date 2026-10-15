@@ -35,7 +35,8 @@ References: `Button/Button.tsx` + `Button/types.ts`, `Input/Input.tsx` + `Input/
    }, [size]);
    ```
 9. **Styling is inline Tailwind utility classes**. No CSS modules, no styled-components, no CSS-in-JS, no external UI libs.
-10. **Theme tokens**: use the custom Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active` variants), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, `text-folder`/`fill-folder` (the yellow used for folder icons), etc. Don't hardcode hex colors.
+10. **Theme tokens**: use the custom Tailwind variables defined in `src/assets/css/` — `bg-surface`, `text-text-color`, `border-border-color`, `bg-primary` (+ `-hover`/`-active` variants), `bg-danger`, `bg-success`, `bg-warning`, `bg-info`, `bg-secondary`, `text-danger`, `text-folder`/`fill-folder` (the gold used for folder icons), `text-on-primary` (text on filled buttons, since dark-mode fills are light), `border-border-strong` (hover borders), etc. Don't hardcode hex colors.
+11. **Flat style**: no shadows and no focus rings. Show state with border or background colour, and keep keyboard focus visible with `focus-visible:outline-2 focus-visible:outline-primary`. `Button` variants: `primary` for the main action, `outline` for cancel or secondary actions, `ghost` for icon actions, `ghost-danger` for destructive icon actions, and filled `danger` only to confirm a destructive action. Don't use filled `success`/`danger` for ordinary Save/Cancel pairs.
 
 ## Don'ts
 

@@ -1,73 +1,79 @@
+/* Palette derived from the Lumark logo (navy #202169, indigo #4033ba,
+   violet #9b7bff, cyan #3aceff), softened for a calm, flat look. Shared with
+   the website/docs design system. Surfaces and main text are unchanged. */
 :root {
-  /* ===== Brand (shared) ===== */
-  --primary: #2f5bff;
+  /* ===== Brand: logo indigo ===== */
+  --primary: #4b45a8;
 
-  --primary-50:  #eef2ff;
-  --primary-100: #dfe6ff;
-  --primary-200: #c7d2ff;
-  --primary-300: #a5b4ff;
-  --primary-400: #7c8cff;
-  --primary-500: #5468ff;
-  --primary-600: #3d53f6;
-  --primary-700: #2f5bff;
-  --primary-800: #243fd1;
-  --primary-900: #1b2ea3;
+  --primary-50:  #f2f1fb;
+  --primary-100: #e5e3f6;
+  --primary-200: #cdc9ee;
+  --primary-300: #aca6e2;
+  --primary-400: #8f88d4;
+  --primary-500: #6e67c0;
+  --primary-600: #5751b4;
+  --primary-700: #4b45a8;
+  --primary-800: #3d3889;
+  --primary-900: #2e2a6a;
 
-  /* ===== Secondary brand (royal violet luxury accent) ===== */
-  --secondary: #7a5cff;
+  /* ===== Secondary brand: logo violet ===== */
+  --secondary: #8a76d9;
 
-  --secondary-50:  #f3f1ff;
-  --secondary-100: #e7e3ff;
-  --secondary-200: #d2ccff;
-  --secondary-300: #b6aaff;
-  --secondary-400: #9a87ff;
-  --secondary-500: #866cff;
-  --secondary-600: #7a5cff;
-  --secondary-700: #6246e6;
-  --secondary-800: #4b33b8;
-  --secondary-900: #37258a;
+  --secondary-50:  #f5f2fd;
+  --secondary-100: #ece8fb;
+  --secondary-200: #dad2f6;
+  --secondary-300: #c2b5ef;
+  --secondary-400: #a895f0;
+  --secondary-500: #9a86e3;
+  --secondary-600: #8a76d9;
+  --secondary-700: #7461c2;
+  --secondary-800: #5d4d9e;
+  --secondary-900: #463a77;
 
   /* ===== Ghost button ===== */
   --ghost-button-bg: transparent;
   --ghost-button-hover-primary-bg: color-mix(in srgb, var(--primary) 10%, transparent);
-  --ghost-button-active-primary-bg: color-mix(in srgb, var(--primary) 20%, transparent);
+  --ghost-button-active-primary-bg: color-mix(in srgb, var(--primary) 18%, transparent);
   --ghost-button-hover-secondary-bg: color-mix(in srgb, var(--secondary) 10%, transparent);
-  --ghost-button-active-secondary-bg: color-mix(in srgb, var(--secondary) 20%, transparent);
-  --ghost-button-hover-gray-bg: color-mix(in srgb, var(--muted-text) 10%, transparent);
+  --ghost-button-active-secondary-bg: color-mix(in srgb, var(--secondary) 18%, transparent);
+  --ghost-button-hover-gray-bg: color-mix(in srgb, var(--muted-text) 12%, transparent);
   --ghost-button-active-gray-bg: color-mix(in srgb, var(--muted-text) 20%, transparent);
 
-  /* ===== Gray bg colors ===== */
-  --gray-bg-light: #f9fafb;
-  --gray-bg-light-hover: #f3f4f6;
-  --gray-bg-light-active: #e5e7eb;
+  /* ===== Gray bg colors (lavender-tinted to sit with the indigo brand) ===== */
+  --gray-bg-light: #f8f8fc;
+  --gray-bg-light-hover: #f1f0f8;
+  --gray-bg-light-active: #e8e6f5;
 
-  --gray-bg-dark: #1f2937;
-  --gray-bg-dark-hover: #2d3748;
-  --gray-bg-dark-active: #4a5568;
+  --gray-bg-dark: #12172a;
+  --gray-bg-dark-hover: #161a2d;
+  --gray-bg-dark-active: #252a52;
 
-
-  /* semantic */
-  --success: #18b47b; /* TODO: add shades for these colors like primary/secondary */
-  --warning: #f5a524; /* TODO: add shades for these colors like primary/secondary */
-  --danger: #e5484d; /* TODO: add shades for these colors like primary/secondary */
-  --info: #3aa1ff; /* TODO: add shades for these colors like primary/secondary */
+  /* ===== Feedback (muted, logo-adjacent) ===== */
+  --success-light: #3d8f76;
+  --success-dark: #6bb59c;
+  --warning-light: #b58a45;
+  --warning-dark: #d1ab6b;
+  --danger-light: #b0566a;
+  --danger-dark: #d17e90;
+  --info-light: #4a8fbf;
+  --info-dark: #74aed6;
 
   /* Kept distinct from --warning so a folder never reads as a warning state. */
-  --folder: #eab308;
-  --folder-dark: #facc15;
+  --folder-light: #d6a72e;
+  --folder-dark: #e2bd55;
 
-  /* neutrals */
+  /* ===== Neutrals ===== */
   --text-light: #0f172a;
   --text-dark: #e5e7eb;
 
   --surface-light: #ffffff;
   --surface-dark: #0b0f1a;
 
-  --muted-light: #6b7280;
-  --muted-dark: #9ca3af;
+  --muted-light: #66657d;
+  --muted-dark: #a3a1c0;
 
-  --border-light: #d1d5db; /* ex color: #e5e7eb */
-  --border-dark: #374151; /* ex color: #1f2937 */
+  --border-light: #e2e0ee;
+  --border-dark: #262b45;
 }
 
 /* ===== Light ===== */
@@ -78,26 +84,40 @@
   --surface: var(--surface-light);
   --muted-text: var(--muted-light);
   --border-color: var(--border-light);
+  --border-strong: color-mix(in srgb, var(--border-light) 55%, var(--muted-light));
 
-  --primary-hover: var(--primary-600);
-  --primary-active: var(--primary-800);
+  --on-primary: #ffffff;
+
+  --primary-hover: var(--primary-800);
+  --primary-active: var(--primary-900);
 
   --secondary-hover: var(--secondary-700);
   --secondary-active: var(--secondary-800);
 
+  --success: var(--success-light);
+  --warning: var(--warning-light);
+  --danger: var(--danger-light);
+  --info: var(--info-light);
+
+  --success-hover: color-mix(in srgb, var(--success) 85%, black);
+  --success-active: color-mix(in srgb, var(--success) 72%, black);
+  --warning-hover: color-mix(in srgb, var(--warning) 85%, black);
+  --warning-active: color-mix(in srgb, var(--warning) 72%, black);
   --danger-hover: color-mix(in srgb, var(--danger) 85%, black);
-  --danger-active: color-mix(in srgb, var(--danger) 70%, black);
+  --danger-active: color-mix(in srgb, var(--danger) 72%, black);
+  --info-hover: color-mix(in srgb, var(--info) 85%, black);
+  --info-active: color-mix(in srgb, var(--info) 72%, black);
 
-  /* TODO: add hover and active colors for success, warning, info (same for dark theme) */
-
-  --danger-bg: color-mix(in srgb, var(--danger) 12%, white);
-  --success-bg: color-mix(in srgb, var(--success) 12%, white);
-  --warning-bg: color-mix(in srgb, var(--warning) 12%, white);
-  --info-bg: color-mix(in srgb, var(--info) 12%, white);
+  --danger-bg: color-mix(in srgb, var(--danger) 10%, white);
+  --success-bg: color-mix(in srgb, var(--success) 10%, white);
+  --warning-bg: color-mix(in srgb, var(--warning) 10%, white);
+  --info-bg: color-mix(in srgb, var(--info) 10%, white);
 
   --gray-bg: var(--gray-bg-light);
   --gray-bg-hover: var(--gray-bg-light-hover);
   --gray-bg-active: var(--gray-bg-light-active);
+
+  --folder: var(--folder-light);
 }
 
 /* ===== Dark ===== */
@@ -110,20 +130,37 @@
   --surface: var(--surface-dark);
   --muted-text: var(--muted-dark);
   --border-color: var(--border-dark);
+  --border-strong: color-mix(in srgb, var(--border-dark) 55%, var(--muted-dark));
 
-  --primary-hover: var(--primary-400);
-  --primary-active: var(--primary-300);
+  /* The dark primary is light, so text on a primary fill turns dark. */
+  --primary: #8f88e6;
+  --secondary: var(--secondary-400);
+  --on-primary: var(--surface-dark);
 
-  --secondary-hover: var(--secondary-400);
-  --secondary-active: var(--secondary-300);
+  --primary-hover: #a19be9;
+  --primary-active: #b4afee;
 
+  --secondary-hover: var(--secondary-300);
+  --secondary-active: var(--secondary-200);
+
+  --success: var(--success-dark);
+  --warning: var(--warning-dark);
+  --danger: var(--danger-dark);
+  --info: var(--info-dark);
+
+  --success-hover: color-mix(in srgb, var(--success) 85%, white);
+  --success-active: color-mix(in srgb, var(--success) 72%, white);
+  --warning-hover: color-mix(in srgb, var(--warning) 85%, white);
+  --warning-active: color-mix(in srgb, var(--warning) 72%, white);
   --danger-hover: color-mix(in srgb, var(--danger) 85%, white);
-  --danger-active: color-mix(in srgb, var(--danger) 70%, white);
+  --danger-active: color-mix(in srgb, var(--danger) 72%, white);
+  --info-hover: color-mix(in srgb, var(--info) 85%, white);
+  --info-active: color-mix(in srgb, var(--info) 72%, white);
 
-  --danger-bg: color-mix(in srgb, var(--danger) 20%, black);
-  --success-bg: color-mix(in srgb, var(--success) 20%, black);
-  --warning-bg: color-mix(in srgb, var(--warning) 20%, black);
-  --info-bg: color-mix(in srgb, var(--info) 20%, black);
+  --danger-bg: color-mix(in srgb, var(--danger) 14%, var(--surface-dark));
+  --success-bg: color-mix(in srgb, var(--success) 14%, var(--surface-dark));
+  --warning-bg: color-mix(in srgb, var(--warning) 14%, var(--surface-dark));
+  --info-bg: color-mix(in srgb, var(--info) 14%, var(--surface-dark));
 
   --gray-bg: var(--gray-bg-dark);
   --gray-bg-hover: var(--gray-bg-dark-hover);

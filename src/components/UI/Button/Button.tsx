@@ -17,26 +17,29 @@ const Button: FC<IButtonProps> = ({
 }) => {
   const buttonSize = useMemo(() => {
     const sizeMapping: Record<ButtonSizeType, string> = {
-      xs: 'px-2 py-0.5 text-sm',
-      sm: 'px-3 py-1 text-base',
-      md: 'px-4 py-1.5 text-lg',
-      lg: 'px-5 py-2 text-xl',
-      xl: 'px-6 py-3 text-2xl',
+      xs: 'h-6 px-2 text-xs',
+      sm: 'h-7 px-3 text-sm',
+      md: 'h-8 px-4 text-sm',
+      lg: 'h-10 px-5 text-base',
+      xl: 'h-12 px-6 text-lg',
       'square-icon': 'p-1',
     };
 
     return sizeMapping[size] || sizeMapping.md;
   }, [size]);
 
+  // Feedback fills use text-on-primary rather than white: in dark mode every fill is a light tone.
   const buttonColor = useMemo(() => {
     const variantMapping: Record<ButtonVariantType, string> = {
-      primary: 'bg-primary hover:bg-primary-hover active:bg-primary-active text-white',
-      secondary: 'bg-secondary hover:bg-secondary-hover active:bg-secondary-active text-white',
-      ghost: 'bg-transparent hover:bg-ghost-button-hover-gray-bg active:bg-ghost-button-active-gray-bg text-text-color', // add hover and active colors to base.css and tailwind.config.js
-      danger: 'bg-danger hover:bg-danger-hover active:bg-danger-active text-white',
-      success: 'bg-success hover:bg-success-hover active:bg-success-active text-white', // TODO: add hover and active colors to base.css and tailwind.config.js
-      warning: 'bg-warning hover:bg-warning-hover active:bg-warning-active text-white', // TODO: add hover and active colors to base.css and tailwind.config.js
-      info: 'bg-info hover:bg-info-hover active:bg-info-active text-white', // TODO: add hover and active colors to base.css and tailwind.config.js
+      primary: 'bg-primary hover:bg-primary-hover active:bg-primary-active text-on-primary',
+      secondary: 'bg-secondary hover:bg-secondary-hover active:bg-secondary-active text-on-primary',
+      ghost: 'bg-transparent hover:bg-ghost-button-hover-gray-bg active:bg-ghost-button-active-gray-bg text-muted-text hover:text-text-color',
+      'ghost-danger': 'bg-transparent hover:bg-danger-bg active:bg-danger-bg text-muted-text hover:text-danger',
+      outline: 'bg-transparent border border-border-color hover:bg-gray-bg-hover hover:border-border-strong active:bg-gray-bg-active text-text-color',
+      danger: 'bg-danger hover:bg-danger-hover active:bg-danger-active text-on-primary',
+      success: 'bg-success hover:bg-success-hover active:bg-success-active text-on-primary',
+      warning: 'bg-warning hover:bg-warning-hover active:bg-warning-active text-on-primary',
+      info: 'bg-info hover:bg-info-hover active:bg-info-active text-on-primary',
     };
 
     return variantMapping[variant] || variantMapping.primary;
@@ -62,7 +65,7 @@ const Button: FC<IButtonProps> = ({
 
   return (
     <button
-      className={`outline-none hover:cursor-pointer transition ${buttonSize} ${buttonColor} ${buttonRounded} ${disabled || isLoading ? '!cursor-not-allowed opacity-50' : ''} ${className}`}
+      className={`shrink-0 font-medium outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary hover:cursor-pointer transition-colors ${buttonSize} ${buttonColor} ${buttonRounded} ${disabled || isLoading ? '!cursor-not-allowed opacity-50' : ''} ${className}`}
       disabled={disabled || isLoading}
       {...rest}
     >
