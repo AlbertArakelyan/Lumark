@@ -12,10 +12,10 @@ const FilesList = () => {
 
   const getEmptyMessage = () => {
     if (!selectedFolder) {
-      return 'Select a folder to see its notes.';
+      return 'Select a folder to see its notes';
     }
 
-    return isSearching ? 'No files match your search.' : 'No files found.';
+    return isSearching ? 'No notes match your search' : 'No notes in this folder yet';
   };
 
   return (

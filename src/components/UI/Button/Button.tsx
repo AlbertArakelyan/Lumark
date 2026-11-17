@@ -15,6 +15,9 @@ const Button: FC<IButtonProps> = ({
   disabled,
   ...rest
 }) => {
+  const isIconOnly = size.startsWith('icon-');
+  const isInactive = disabled || isLoading;
+
   const buttonSize = useMemo(() => {
     const sizeMapping: Record<ButtonSizeType, string> = {
       xs: 'h-6 px-2 text-xs',
@@ -22,7 +25,9 @@ const Button: FC<IButtonProps> = ({
       md: 'h-8 px-4 text-sm',
       lg: 'h-10 px-5 text-base',
       xl: 'h-12 px-6 text-lg',
-      'square-icon': 'p-1',
+      'icon-xs': 'h-6 w-6',
+      'icon-sm': 'h-7 w-7',
+      'icon-md': 'h-8 w-8',
     };
 
     return sizeMapping[size] || sizeMapping.md;
@@ -45,43 +50,47 @@ const Button: FC<IButtonProps> = ({
     return variantMapping[variant] || variantMapping.primary;
   }, [variant]);
 
+  // Icon buttons usually sit inside 8px rows, so they default one radius step smaller to nest cleanly.
   const buttonRounded = useMemo(() => {
     const roundedMapping: Record<ButtonRoundedType, string> = {
-      default: 'rounded-md',
-      rounded: 'rounded-lg',
+      default: isIconOnly ? 'rounded-md' : 'rounded-lg',
+      sm: 'rounded-md',
+      lg: 'rounded-lg',
       circle: 'rounded-full',
     };
 
     return roundedMapping[rounded] || roundedMapping.default;
-  }, [rounded]);
+  }, [rounded, isIconOnly]);
 
   const iconPositionMarginClass = useMemo(() => {
-    if (size === 'square-icon') {
+    if (isIconOnly) {
       return '';
     }
 
-    return iconPosition === 'left' ? 'mr-2' : 'ml-2';
-  }, [iconPosition, size]);
+    return iconPosition === 'left' ? 'ml-2' : 'mr-2';
+  }, [iconPosition, isIconOnly]);
 
   return (
     <button
-      className={`shrink-0 font-medium outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary hover:cursor-pointer transition-colors ${buttonSize} ${buttonColor} ${buttonRounded} ${disabled || isLoading ? '!cursor-not-allowed opacity-50' : ''} ${className}`}
-      disabled={disabled || isLoading}
+      className={`inline-flex shrink-0 items-center justify-center font-medium outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary transition-[color,background-color,border-color,transform] duration-150 ${isInactive ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.97]'} ${buttonSize} ${buttonColor} ${buttonRounded} ${className}`}
+      disabled={isInactive}
       {...rest}
     >
-      <div className={`flex items-center justify-center ${buttonContainerClassName}`}>
+      <span className={`flex items-center justify-center ${buttonContainerClassName}`}>
         {icon ? (
           <>
             {iconPosition === 'left' && icon}
-            <div className={`${iconPositionMarginClass} ${buttonContentClassName}`}>
-              {children}
-            </div>
+            {children && (
+              <span className={`${iconPositionMarginClass} ${buttonContentClassName}`}>
+                {children}
+              </span>
+            )}
             {iconPosition === 'right' && icon}
           </>
         ) : (
           children
         )}
-      </div>
+      </span>
     </button>
   );
 };

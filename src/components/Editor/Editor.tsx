@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { EditorView } from '@codemirror/view';
-import { Compartment, EditorState } from '@codemirror/state';
+import { Compartment, EditorState, Prec } from '@codemirror/state';
 import { markdown } from '@codemirror/lang-markdown';
 import { basicSetup } from 'codemirror';
 import remarkGfm from 'remark-gfm';
@@ -25,6 +25,22 @@ const themeCompartment = new Compartment();
 
 const getEditorTheme = (theme: ThemeEnum) => (theme === ThemeEnum.DARK ? githubDark : githubLight);
 
+// The GitHub themes paint their own backgrounds (#0d1117 in dark), which don't match the app
+// surface. This keeps their syntax colours but lets the editor sit on the same page as the UI.
+// Highest precedence so it wins over whichever theme the compartment holds.
+const surfaceTheme = Prec.highest(EditorView.theme({
+  '&': { backgroundColor: 'transparent', fontSize: '14px' },
+  '&.cm-focused': { outline: 'none' },
+  '.cm-scroller': { lineHeight: '1.7' },
+  '.cm-content': { padding: '16px 0' },
+  '.cm-gutters': {
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: 'var(--muted-text)',
+  },
+  '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--text-color)' },
+}));
+
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
 // inside a new Editor.tsx (Editor2.tsx) component and compare
 // Consider last published 2 years ago, meanwhile code mirror is actively being updated
@@ -45,6 +61,7 @@ const Editor = () => {
           EditorView.lineWrapping,
           markdown(),
           themeCompartment.of(getEditorTheme(theme)),
+          surfaceTheme,
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {
               setContent(update.state.doc.toString());
@@ -100,11 +117,11 @@ const Editor = () => {
   return (
     <>
       <style>{previewCss}</style>
-      <div className="flex items-start justify-between gap-2 p-2">
-        <div className={`w-1/2 min-w-0 ${editorMode === EditorModeEnum.PREVIEW ? 'hidden' : ''} ${editorMode === EditorModeEnum.EDIT ? '!w-full' : ''}`}>
+      <div className="flex items-stretch min-h-full">
+        <div className={`w-1/2 min-w-0 pr-2 ${editorMode === EditorModeEnum.SPLIT ? 'border-r border-border-color' : ''} ${editorMode === EditorModeEnum.PREVIEW ? 'hidden' : ''} ${editorMode === EditorModeEnum.EDIT ? '!w-full' : ''}`}>
           <div id="editor-container"></div>
         </div>
-        <div className={`w-1/2 min-w-0 ${editorMode === EditorModeEnum.EDIT ? 'hidden' : ''} ${editorMode === EditorModeEnum.PREVIEW ? '!w-full' : ''}`}>
+        <div className={`w-1/2 min-w-0 px-8 py-6 ${editorMode === EditorModeEnum.EDIT ? 'hidden' : ''} ${editorMode === EditorModeEnum.PREVIEW ? '!w-full' : ''}`}>
           <article className="markdown-body">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}

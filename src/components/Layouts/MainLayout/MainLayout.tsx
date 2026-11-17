@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, useState } from 'react';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import FoldersPanel from './FoldersPanel/FoldersPanel';
 import FilesPanel from './FilesPanel/FilesPanel';
+import NotePath from './NotePath/NotePath';
 import EditorMode from '../../Editor/EditorMode';
 import ToolbarButton from '../../UI/ToolbarButton/ToolbarButton';
 import ThemeToggle from './ThemeToggle/ThemeToggle';
@@ -14,17 +15,19 @@ const MainLayout: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <div className="flex flex-col h-dvh overflow-hidden">
-      <header className="h-9 shrink-0 border-b border-border-color flex items-center justify-between px-4">
+      <header className="h-10 shrink-0 border-b border-border-color flex items-center gap-3 px-2">
         <ToolbarButton
           isActive={areSidePanelsCollapsed}
           onClick={() => setAreSidePanelsCollapsed((previousValue) => !previousValue)}
           title={sidePanelsToggleLabel}
           aria-label={sidePanelsToggleLabel}
         >
-          {areSidePanelsCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+          {areSidePanelsCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
         </ToolbarButton>
-        <div className="flex items-center gap-1">
+        <NotePath />
+        <div className="ml-auto flex items-center gap-2">
           <EditorMode />
+          <span className="h-4 w-px bg-border-color" aria-hidden="true" />
           <ThemeToggle />
         </div>
       </header>

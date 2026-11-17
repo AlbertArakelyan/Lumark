@@ -14,3 +14,40 @@ html, body, #root {
   height: 100%;
   overflow: hidden;
 }
+
+/* One stroke for every lucide icon; CSS wins over the 2px presentation attribute lucide sets. */
+svg.lucide {
+  stroke-width: 1.5;
+}
+
+/* The preview reads as a page set on the app surface, not a GitHub panel pasted on top of it.
+   `article` raises specificity above the theme css that Editor injects after this file. */
+article.markdown-body {
+  background-color: transparent;
+  line-height: 1.7;
+}
+
+@keyframes lumark-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lumark-rise-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lumark-fade-in {
+  animation: lumark-fade-in 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lumark-dialog-in {
+  animation: lumark-rise-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lumark-fade-in,
+  .lumark-dialog-in {
+    animation: none;
+  }
+}

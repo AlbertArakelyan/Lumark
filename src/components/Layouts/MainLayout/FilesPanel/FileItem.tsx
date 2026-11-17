@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, FC, KeyboardEvent, useState } from 'react';
 import { CheckIcon, PencilIcon, Trash2Icon, XIcon } from 'lucide-react';
 import { IFileItemProps } from './types';
 import { useAppContext } from '../../../../contexts/AppProvider';
@@ -20,7 +20,13 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
   const trimmedFileName = fileName.trim();
   const isSaveDisabled = !trimmedFileName || trimmedFileName === file.file_name;
 
-  const deleteConfirmContent = `Are you sure you want to delete the file "${file.file_name}"? This action cannot be undone.`;
+  const createdOn = new Date(epoch * 1000).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  const deleteConfirmContent = `The note "${file.file_name}" will be deleted. This can't be undone.`;
 
   const handleFileClick = () => {
     if (isEditingName) {
@@ -30,11 +36,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
     selectFile(file.file_name);
   };
 
-  const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // Prevent the click event from bubbling up to the file item
-
-    setIsDeleteConfirmOpen(true);
-  };
+  const handleDeleteClick = () => setIsDeleteConfirmOpen(true);
 
   const handleDeleteCancel = () => setIsDeleteConfirmOpen(false);
 
@@ -49,9 +51,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
     }
   };
 
-  const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // Prevent the click event from bubbling up to the file item
-
+  const handleEditClick = () => {
     setFileName(file.file_name);
     setRenameError('');
     setIsEditingName(true);
@@ -73,7 +73,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
       setIsEditingName(false);
       setRenameError('');
     } catch (error) {
-      setRenameError(typeof error === 'string' ? error : 'Failed to rename file');
+      setRenameError(typeof error === 'string' ? error : 'Could not rename the note');
     }
   };
 
@@ -94,19 +94,12 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
 
   return (
     <>
-      <div
-        key={file.file_name}
-        className={`group relative flex flex-col gap-y-0.5 px-2.5 py-2 cursor-pointer rounded-lg transition-colors ${isSelected ? 'bg-gray-bg-active' : 'hover:bg-gray-bg-hover'}`}
-        onClick={handleFileClick}
-      >
-        {isEditingName ? (
-          <div
-            className="flex items-center gap-1"
-            onClick={(e) => e.stopPropagation()}
-          >
+      {isEditingName ? (
+        <div className="flex flex-col gap-1 px-2 py-2 rounded-lg bg-gray-bg-hover">
+          <div className="flex items-start gap-1">
             <Input
               autoFocus
-              rounded="rounded"
+              aria-label="Note name"
               value={fileName}
               error={renameError}
               onChange={handleFileNameChange}
@@ -114,49 +107,59 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
             />
             <Button
               variant="ghost"
-              size="square-icon"
+              size="icon-md"
               className="!text-primary"
               icon={<CheckIcon size={16} />}
-              aria-label="Save file name"
+              aria-label="Save note name"
+              title="Save"
               disabled={isSaveDisabled}
               onClick={handleSaveEdit}
             />
             <Button
               variant="ghost"
-              size="square-icon"
+              size="icon-md"
               icon={<XIcon size={16} />}
               aria-label="Cancel renaming"
+              title="Cancel"
               onClick={handleCancelEdit}
             />
           </div>
-        ) : (
-          <h3 className={`text-sm font-medium truncate ${isSelected ? 'text-primary' : ''}`} title={file.file_name}>{file.file_name}</h3>
-        )}
-        <p className={`text-xs text-muted-text ${renameError ? 'mt-4' : ''}`}>
-          {new Date(epoch * 1000).toLocaleDateString()}
-        </p>
-        {!isEditingName && (
-          // The backing matches the row so the actions cover a long title instead of colliding with it.
-          <div className={`absolute top-1/2 -translate-y-1/2 right-1.5 flex items-center gap-0.5 p-0.5 rounded-md opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity ${isSelected ? 'bg-gray-bg-active' : 'bg-gray-bg-hover'}`}>
+          <p className="font-mono text-xs tabular-nums text-muted-text">{createdOn}</p>
+        </div>
+      ) : (
+        <div className={`group relative rounded-lg transition-colors duration-150 ${isSelected ? 'bg-gray-bg-active' : 'hover:bg-gray-bg-hover'}`}>
+          <button
+            type="button"
+            className="w-full flex flex-col px-2 py-2 rounded-lg text-left cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-primary"
+            aria-current={isSelected ? 'true' : undefined}
+            title={file.file_name}
+            onClick={handleFileClick}
+          >
+            <span className={`text-sm truncate ${isSelected ? 'font-medium text-primary' : ''}`}>{file.file_name}</span>
+            <span className="font-mono text-xs tabular-nums text-muted-text">{createdOn}</span>
+          </button>
+          {/* The backing matches the row so the actions cover a long title instead of colliding with it.
+              Besides hover, only keyboard focus reveals them: a mouse click focuses the row too and would pin them open. */}
+          <div className={`absolute top-1/2 -translate-y-1/2 right-2 flex items-center gap-0.5 rounded-md opacity-0 group-hover:opacity-100 group-has-[:focus-visible]:opacity-100 transition-opacity duration-150 ${isSelected ? 'bg-gray-bg-active' : 'bg-gray-bg-hover'}`}>
             <Button
               variant="ghost"
-              size="square-icon"
-              icon={<PencilIcon size={14} />}
-              aria-label="Rename file"
+              size="icon-sm"
+              icon={<PencilIcon size={16} />}
+              aria-label="Rename note"
               title="Rename"
               onClick={handleEditClick}
             />
             <Button
               variant="ghost-danger"
-              size="square-icon"
-              icon={<Trash2Icon size={14} />}
-              aria-label="Delete file"
+              size="icon-sm"
+              icon={<Trash2Icon size={16} />}
+              aria-label="Delete note"
               title="Delete"
               onClick={handleDeleteClick}
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <ConfirmModal
         isOpen={isDeleteConfirmOpen}
         title="Delete note"

@@ -37,7 +37,7 @@ const FilesSearch = () => {
       // Clear the search so the freshly added file is visible in the list
       setSearchQuery('');
     } catch (error) {
-      setAddError(typeof error === 'string' ? error : 'Failed to add file');
+      setAddError(typeof error === 'string' ? error : 'Could not add the note');
     }
   };
 
@@ -78,13 +78,12 @@ const FilesSearch = () => {
             autoFocus
             key="file-name-input"
             placeholder="Note name"
-            rounded="rounded"
             value={fileName}
             error={addError}
             onChange={handleFileNameChange}
             onKeyDown={handleFileNameKeyDown}
           />
-          <div className={`flex items-center gap-1.5 w-full justify-end ${addError ? 'mt-4' : ''}`}>
+          <div className="flex items-center gap-2 w-full justify-end">
             <Button
               size="sm"
               variant="outline"
@@ -103,19 +102,17 @@ const FilesSearch = () => {
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Input
             key="file-search-input"
             placeholder="Search"
-            rounded="rounded"
-            className="disabled:opacity-50"
+            aria-label="Search notes"
             disabled={!selectedFolder}
             icon={searchQuery ? (
               <Button
                 variant="ghost"
-                size="square-icon"
-                rounded="circle"
-                className="!p-0.5"
+                size="icon-xs"
+                rounded="sm"
                 icon={<XIcon size={14} />}
                 aria-label="Clear search"
                 onClick={handleClearSearch}
@@ -129,10 +126,10 @@ const FilesSearch = () => {
           />
           <Button
             variant="outline"
-            size="square-icon"
-            className="!p-0 h-8 w-8"
+            size="icon-md"
+            rounded="lg"
             icon={<SquarePenIcon size={16} />}
-            aria-label="Add file"
+            aria-label="New note"
             title="New note"
             disabled={!selectedFolder}
             onClick={handleAddFileClick}

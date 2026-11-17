@@ -62,38 +62,39 @@ const FoldersHeader = () => {
             key="folder-name-input"
             placeholder="Folder"
             inputElSize="xs"
-            rounded="rounded"
+            rounded="sm"
             value={folderName}
             error={addError}
             onChange={handleFolderNameChange}
             onKeyDown={handleFolderNameKeyDown}
           />
-          <div className={`flex items-center gap-0.5 w-full justify-end ${addError ? 'mt-4' : ''}`}>
+          <div className="flex items-center gap-0.5 w-full justify-end">
             <Button
               variant="ghost"
-              size="square-icon"
+              size="icon-xs"
               className="!text-primary"
               icon={<CheckIcon size={14} />}
               aria-label="Save folder name"
+              title="Save"
               disabled={!trimmedFolderName}
               onClick={handleAddFolder}
             />
             <Button
               variant="ghost"
-              size="square-icon"
+              size="icon-xs"
               icon={<XIcon size={14} />}
               aria-label="Cancel adding folder"
+              title="Cancel"
               onClick={handleCancelAddFolder}
             />
           </div>
         </div>
       ) : (
         <div className="flex items-center justify-between gap-1 h-8 pl-2">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-text truncate">Folders</h2>
+          <h2 className="text-xs font-medium text-muted-text truncate">Folders</h2>
           <Button
-            className="!p-1"
             variant="ghost"
-            size="square-icon"
+            size="icon-sm"
             icon={<FolderPlusIcon size={16} />}
             aria-label="Add folder"
             title="New folder"
