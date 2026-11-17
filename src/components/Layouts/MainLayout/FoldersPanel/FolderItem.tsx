@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, FC, KeyboardEvent, useState } from 'react';
 import { CheckIcon, FolderIcon, FolderOpenIcon, PencilIcon, Trash2Icon, XIcon } from 'lucide-react';
 import { IFolderItemProps } from './types';
 import { useAppContext } from '../../../../contexts/AppProvider';
@@ -22,7 +22,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
   const notesWarning = folder.note_count > 0
     ? ` The ${folder.note_count} note${folder.note_count === 1 ? '' : 's'} inside will be deleted too.`
     : '';
-  const deleteConfirmContent = `Are you sure you want to delete the folder "${folder.folder_name}"?${notesWarning} This action cannot be undone.`;
+  const deleteConfirmContent = `The folder "${folder.folder_name}" will be deleted.${notesWarning} This can't be undone.`;
 
   const handleFolderClick = () => {
     if (isEditingName) {
@@ -32,11 +32,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
     selectFolder(folder.folder_name);
   };
 
-  const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // Prevent the click event from bubbling up to the folder item
-
-    setIsDeleteConfirmOpen(true);
-  };
+  const handleDeleteClick = () => setIsDeleteConfirmOpen(true);
 
   const handleDeleteCancel = () => setIsDeleteConfirmOpen(false);
 
@@ -51,9 +47,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
     }
   };
 
-  const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // Prevent the click event from bubbling up to the folder item
-
+  const handleEditClick = () => {
     setFolderName(folder.folder_name);
     setRenameError('');
     setIsEditingName(true);
@@ -96,31 +90,33 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
 
   if (isEditingName) {
     return (
-      <div className={`flex flex-col items-start gap-1 p-1.5 rounded-lg ${renameError ? 'pb-5' : ''}`}>
+      <div className="flex flex-col items-start gap-1 py-1">
         <Input
           autoFocus
           inputElSize="xs"
-          rounded="rounded"
+          rounded="sm"
           value={folderName}
           error={renameError}
           onChange={handleFolderNameChange}
           onKeyDown={handleFolderNameKeyDown}
         />
-        <div className={`flex items-center gap-0.5 w-full justify-end ${renameError ? 'mt-4' : ''}`}>
+        <div className="flex items-center gap-0.5 w-full justify-end">
           <Button
             variant="ghost"
-            size="square-icon"
+            size="icon-xs"
             className="!text-primary"
             icon={<CheckIcon size={14} />}
             aria-label="Save folder name"
+            title="Save"
             disabled={isSaveDisabled}
             onClick={handleSaveEdit}
           />
           <Button
             variant="ghost"
-            size="square-icon"
+            size="icon-xs"
             icon={<XIcon size={14} />}
             aria-label="Cancel renaming"
+            title="Cancel"
             onClick={handleCancelEdit}
           />
         </div>
@@ -128,34 +124,42 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
     );
   }
 
+  // Gold marks the open folder only; on every row it would stop meaning anything.
+  const folderIcon = isSelected
+    ? <FolderOpenIcon size={16} className="shrink-0 fill-folder text-folder" />
+    : <FolderIcon size={16} className="shrink-0 text-muted-text" />;
+
   return (
     <>
-      <div
-        className={`group relative flex items-center gap-1.5 px-2 py-1.5 cursor-pointer rounded-md transition-colors ${isSelected ? 'bg-gray-bg-active text-primary' : 'hover:bg-gray-bg-hover'}`}
-        onClick={handleFolderClick}
-      >
-        {isSelected ? (
-          <FolderOpenIcon size={14} className="shrink-0 fill-folder text-folder" />
-        ) : (
-          <FolderIcon size={14} className="shrink-0 fill-folder text-folder" />
-        )}
-        <span className={`text-sm truncate ${isSelected ? 'font-medium' : ''}`} title={folder.folder_name}>{folder.folder_name}</span>
-        {/* The backing matches the row so the actions cover a long name instead of colliding with it. */}
-        <div className={`absolute top-1/2 -translate-y-1/2 right-1 flex items-center rounded-md opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity ${isSelected ? 'bg-gray-bg-active' : 'bg-gray-bg-hover'}`}>
+      <div className={`group relative rounded-lg transition-colors duration-150 ${isSelected ? 'bg-gray-bg-active' : 'hover:bg-gray-bg-hover'}`}>
+        <button
+          type="button"
+          className="w-full h-8 flex items-center gap-1.5 px-2 rounded-lg text-left cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-primary"
+          aria-current={isSelected ? 'true' : undefined}
+          title={folder.folder_name}
+          onClick={handleFolderClick}
+        >
+          {folderIcon}
+          <span className={`min-w-0 flex-1 truncate text-sm ${isSelected ? 'font-medium text-primary' : ''}`}>{folder.folder_name}</span>
+          <span className="shrink-0 font-mono text-xs tabular-nums text-muted-text">
+            {folder.note_count}
+          </span>
+        </button>
+        {/* The backing matches the row so the actions cover a long name instead of colliding with it.
+            Besides hover, only keyboard focus reveals them: a mouse click focuses the row too and would pin them open. */}
+        <div className={`absolute top-1/2 -translate-y-1/2 right-1 flex items-center gap-0.5 rounded-md opacity-0 group-hover:opacity-100 group-has-[:focus-visible]:opacity-100 transition-opacity duration-150 ${isSelected ? 'bg-gray-bg-active' : 'bg-gray-bg-hover'}`}>
           <Button
-            className="!p-0.5"
             variant="ghost"
-            size="square-icon"
-            icon={<PencilIcon size={12} />}
+            size="icon-xs"
+            icon={<PencilIcon size={14} />}
             aria-label="Rename folder"
             title="Rename"
             onClick={handleEditClick}
           />
           <Button
-            className="!p-0.5"
             variant="ghost-danger"
-            size="square-icon"
-            icon={<Trash2Icon size={12} />}
+            size="icon-xs"
+            icon={<Trash2Icon size={14} />}
             aria-label="Delete folder"
             title="Delete"
             onClick={handleDeleteClick}

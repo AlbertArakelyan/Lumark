@@ -15,7 +15,7 @@ const ThemeToggle = () => {
       title={label}
       aria-label={label}
     >
-      {isDark ? <MoonIcon className="w-4 h-4" /> : <SunIcon className="w-4 h-4" />}
+      {isDark ? <MoonIcon size={16} /> : <SunIcon size={16} />}
     </ToolbarButton>
   );
 };

@@ -9,9 +9,9 @@ const editorModeButtons: {
   value: EditorModeEnum;
   icon: ReactNode;
 }[] = [
-  { label: 'Split', value: EditorModeEnum.SPLIT, icon: <SplitSquareHorizontal className="w-4 h-4" /> },
-  { label: 'Edit', value: EditorModeEnum.EDIT, icon: <PencilIcon className="w-4 h-4" /> },
-  { label: 'Preview', value: EditorModeEnum.PREVIEW, icon: <EyeIcon className="w-4 h-4" /> },
+  { label: 'Split', value: EditorModeEnum.SPLIT, icon: <SplitSquareHorizontal size={16} /> },
+  { label: 'Edit', value: EditorModeEnum.EDIT, icon: <PencilIcon size={16} /> },
+  { label: 'Preview', value: EditorModeEnum.PREVIEW, icon: <EyeIcon size={16} /> },
 ];
 
 const EditorMode = () => {
@@ -23,19 +23,20 @@ const EditorMode = () => {
   const buttonsContent = editorModeButtons.map((button) => (
     <ToolbarButton
       key={button.value}
+      size="sm"
       isActive={button.value === editorMode}
       disabled={isDisabled}
       onClick={() => handleEditorModeChange(button.value)}
       title={button.label}
       aria-label={button.label}
-      className="!p-1"
     >
       {button.icon}
     </ToolbarButton>
   ));
 
+  // 24px buttons plus 2px padding make the group 28px, the same height as the toolbar buttons beside it.
   return (
-    <div className="flex w-max items-center gap-0.5 p-0.5 border border-border-color rounded-lg" role="group" aria-label="Editor mode">
+    <div className="flex w-max items-center gap-0.5 p-0.5 bg-gray-bg rounded-lg" role="group" aria-label="Editor mode">
       {buttonsContent}
     </div>
   );
