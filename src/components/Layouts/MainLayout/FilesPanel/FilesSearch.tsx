@@ -37,7 +37,7 @@ const FilesSearch = () => {
       // Clear the search so the freshly added file is visible in the list
       setSearchQuery('');
     } catch (error) {
-      setAddError(typeof error === 'string' ? error : 'Failed to add file');
+      setAddError(typeof error === 'string' ? error : "Couldn't create the note. Try again.");
     }
   };
 
@@ -106,7 +106,7 @@ const FilesSearch = () => {
         <div className="flex items-center gap-1">
           <Input
             key="file-search-input"
-            placeholder="Search"
+            placeholder="Search notes"
             rounded="rounded"
             className="disabled:opacity-50"
             disabled={!selectedFolder}
@@ -132,7 +132,7 @@ const FilesSearch = () => {
             size="square-icon"
             className="!p-0 h-8 w-8"
             icon={<SquarePenIcon size={16} />}
-            aria-label="Add file"
+            aria-label="New note"
             title="New note"
             disabled={!selectedFolder}
             onClick={handleAddFileClick}

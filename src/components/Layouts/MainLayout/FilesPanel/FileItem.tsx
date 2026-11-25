@@ -20,7 +20,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
   const trimmedFileName = fileName.trim();
   const isSaveDisabled = !trimmedFileName || trimmedFileName === file.file_name;
 
-  const deleteConfirmContent = `Are you sure you want to delete the file "${file.file_name}"? This action cannot be undone.`;
+  const deleteConfirmContent = `"${file.file_name}" will be deleted for good. You can't undo this.`;
 
   const handleFileClick = () => {
     if (isEditingName) {
@@ -73,7 +73,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
       setIsEditingName(false);
       setRenameError('');
     } catch (error) {
-      setRenameError(typeof error === 'string' ? error : 'Failed to rename file');
+      setRenameError(typeof error === 'string' ? error : "Couldn't rename the note. Try again.");
     }
   };
 
@@ -117,7 +117,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
               size="square-icon"
               className="!text-primary"
               icon={<CheckIcon size={16} />}
-              aria-label="Save file name"
+              aria-label="Save note name"
               disabled={isSaveDisabled}
               onClick={handleSaveEdit}
             />
@@ -142,16 +142,16 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
               variant="ghost"
               size="square-icon"
               icon={<PencilIcon size={14} />}
-              aria-label="Rename file"
-              title="Rename"
+              aria-label="Rename note"
+              title="Rename note"
               onClick={handleEditClick}
             />
             <Button
               variant="ghost-danger"
               size="square-icon"
               icon={<Trash2Icon size={14} />}
-              aria-label="Delete file"
-              title="Delete"
+              aria-label="Delete note"
+              title="Delete note"
               onClick={handleDeleteClick}
             />
           </div>
@@ -161,7 +161,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
         isOpen={isDeleteConfirmOpen}
         title="Delete note"
         content={deleteConfirmContent}
-        confirmText="Delete"
+        confirmText="Delete note"
         confirmVariant="danger"
         isConfirming={isDeleting}
         onConfirm={handleDeleteConfirm}

@@ -19,10 +19,10 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
   const trimmedFolderName = folderName.trim();
   const isSaveDisabled = !trimmedFolderName || trimmedFolderName === folder.folder_name;
 
-  const notesWarning = folder.note_count > 0
-    ? ` The ${folder.note_count} note${folder.note_count === 1 ? '' : 's'} inside will be deleted too.`
+  const folderContents = folder.note_count > 0
+    ? ` and the ${folder.note_count} note${folder.note_count === 1 ? '' : 's'} in it`
     : '';
-  const deleteConfirmContent = `Are you sure you want to delete the folder "${folder.folder_name}"?${notesWarning} This action cannot be undone.`;
+  const deleteConfirmContent = `"${folder.folder_name}"${folderContents} will be deleted for good. You can't undo this.`;
 
   const handleFolderClick = () => {
     if (isEditingName) {
@@ -75,7 +75,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
       setIsEditingName(false);
       setRenameError('');
     } catch (error) {
-      setRenameError(typeof error === 'string' ? error : 'Failed to rename folder');
+      setRenameError(typeof error === 'string' ? error : "Couldn't rename the folder. Try again.");
     }
   };
 
@@ -148,7 +148,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
             size="square-icon"
             icon={<PencilIcon size={12} />}
             aria-label="Rename folder"
-            title="Rename"
+            title="Rename folder"
             onClick={handleEditClick}
           />
           <Button
@@ -157,7 +157,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
             size="square-icon"
             icon={<Trash2Icon size={12} />}
             aria-label="Delete folder"
-            title="Delete"
+            title="Delete folder"
             onClick={handleDeleteClick}
           />
         </div>
@@ -166,7 +166,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
         isOpen={isDeleteConfirmOpen}
         title="Delete folder"
         content={deleteConfirmContent}
-        confirmText="Delete"
+        confirmText="Delete folder"
         confirmVariant="danger"
         isConfirming={isDeleting}
         onConfirm={handleDeleteConfirm}
