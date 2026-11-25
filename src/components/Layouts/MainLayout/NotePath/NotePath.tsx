@@ -11,8 +11,10 @@ const NotePath = () => {
 
   return (
     <p className="min-w-0 truncate text-sm" title={notePath}>
-      <span className="text-muted-text">{selectedFolder}/</span>
-      <span className="font-medium">{selectedFile}.md</span>
+      <span className="text-muted-text">{selectedFolder}</span>
+      <span className="mx-1.5 text-muted-text">/</span>
+      <span className="font-medium">{selectedFile}</span>
+      <span className="text-muted-text">.md</span>
     </p>
   );
 };
