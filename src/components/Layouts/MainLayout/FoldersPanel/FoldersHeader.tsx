@@ -34,7 +34,7 @@ const FoldersHeader = () => {
       setFolderName('');
       setAddError('');
     } catch (error) {
-      setAddError(typeof error === 'string' ? error : 'Failed to add folder');
+      setAddError(typeof error === 'string' ? error : "Couldn't create the folder. Try again.");
     }
   };
 
@@ -60,7 +60,7 @@ const FoldersHeader = () => {
           <Input
             autoFocus
             key="folder-name-input"
-            placeholder="Folder"
+            placeholder="Folder name"
             inputElSize="xs"
             rounded="rounded"
             value={folderName}
@@ -68,7 +68,7 @@ const FoldersHeader = () => {
             onChange={handleFolderNameChange}
             onKeyDown={handleFolderNameKeyDown}
           />
-          <div className={`flex items-center gap-0.5 w-full justify-end ${addError ? 'mt-4' : ''}`}>
+          <div className="flex items-center gap-0.5 w-full justify-end">
             <Button
               variant="ghost"
               size="square-icon"
@@ -95,7 +95,7 @@ const FoldersHeader = () => {
             variant="ghost"
             size="square-icon"
             icon={<FolderPlusIcon size={16} />}
-            aria-label="Add folder"
+            aria-label="New folder"
             title="New folder"
             onClick={handleAddFolderClick}
           />

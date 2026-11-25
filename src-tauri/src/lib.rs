@@ -45,13 +45,13 @@ fn notes_dir(app: &AppHandle) -> Result<PathBuf, String> {
 // guarded, so there is deliberately only one implementation.
 fn validate_name(name: &str, label: &str) -> Result<(), String> {
     if name.is_empty() {
-        return Err(format!("{} cannot be empty", label));
+        return Err(format!("{} can't be empty", label));
     }
     if name.contains('/') || name.contains('\\') || name.contains('\0') {
-        return Err(format!("{} contains invalid characters", label));
+        return Err(format!("{} can't contain / or \\", label));
     }
     if name == "." || name == ".." {
-        return Err(format!("Invalid {}", label.to_lowercase()));
+        return Err(format!("{} can't be . or ..", label));
     }
 
     Ok(())
@@ -79,7 +79,7 @@ fn ensure_folder_dir(app: &AppHandle, folder_name: &str) -> Result<PathBuf, Stri
 
 // Resolve notes/<folder_name>/<file_name>.md. Read path - folder is not created.
 fn notes_file_path(app: &AppHandle, folder_name: &str, file_name: &str) -> Result<PathBuf, String> {
-    validate_name(file_name, "File name")?;
+    validate_name(file_name, "Note name")?;
 
     let dir = folder_dir(app, folder_name)?;
 
@@ -95,7 +95,7 @@ fn notes_file_path_ensured(
     folder_name: &str,
     file_name: &str,
 ) -> Result<PathBuf, String> {
-    validate_name(file_name, "File name")?;
+    validate_name(file_name, "Note name")?;
 
     let dir = ensure_folder_dir(app, folder_name)?;
 
@@ -253,11 +253,11 @@ fn add_file(app: AppHandle, folder_name: String, file_name: String) -> Result<()
     let file_path = notes_file_path_ensured(&app, &folder_name, &file_name)?;
 
     if file_path.exists() {
-        return Err(format!("A file named \"{}\" already exists", file_name));
+        return Err(format!("There's already a note called \"{}\" in this folder", file_name));
     }
 
     fs::write(&file_path, "")
-        .map_err(|e| format!("Failed to create file: {}", e))?;
+        .map_err(|e| format!("Couldn't create the note: {}", e))?;
 
     Ok(())
 }
@@ -317,7 +317,7 @@ fn delete_file_by_name(
             .map_err(|e| format!("Failed to delete file: {}", e))?;
         Ok(())
     } else {
-        Err("File not found".to_string())
+        Err("This note no longer exists".to_string())
     }
 }
 
@@ -334,7 +334,7 @@ fn rename_file_by_name(
     let new_path = notes_file_path(&app, &folder_name, &new_file_name)?;
 
     if !old_path.exists() {
-        return Err("File not found".to_string());
+        return Err("This note no longer exists".to_string());
     }
 
     if old_path == new_path {
@@ -342,11 +342,11 @@ fn rename_file_by_name(
     }
 
     if new_path.exists() {
-        return Err(format!("A file named \"{}\" already exists", new_file_name));
+        return Err(format!("There's already a note called \"{}\" in this folder", new_file_name));
     }
 
     fs::rename(&old_path, &new_path)
-        .map_err(|e| format!("Failed to rename file: {}", e))?;
+        .map_err(|e| format!("Couldn't rename the note: {}", e))?;
 
     Ok(())
 }
@@ -399,11 +399,11 @@ fn add_folder(app: AppHandle, folder_name: String) -> Result<(), String> {
     let dir = folder_dir(&app, &folder_name)?;
 
     if dir.exists() {
-        return Err(format!("A folder named \"{}\" already exists", folder_name));
+        return Err(format!("There's already a folder called \"{}\"", folder_name));
     }
 
     fs::create_dir_all(&dir)
-        .map_err(|e| format!("Failed to create folder: {}", e))?;
+        .map_err(|e| format!("Couldn't create the folder: {}", e))?;
 
     Ok(())
 }
@@ -420,7 +420,7 @@ fn rename_folder_by_name(
     let new_path = folder_dir(&app, &new_folder_name)?;
 
     if !old_path.is_dir() {
-        return Err("Folder not found".to_string());
+        return Err("This folder no longer exists".to_string());
     }
 
     if old_path == new_path {
@@ -430,11 +430,11 @@ fn rename_folder_by_name(
     // Never merge on collision: merging means per-file collision handling inside
     // a rename, and a mistake there deletes notes.
     if new_path.exists() {
-        return Err(format!("A folder named \"{}\" already exists", new_folder_name));
+        return Err(format!("There's already a folder called \"{}\"", new_folder_name));
     }
 
     fs::rename(&old_path, &new_path)
-        .map_err(|e| format!("Failed to rename folder: {}", e))?;
+        .map_err(|e| format!("Couldn't rename the folder: {}", e))?;
 
     Ok(())
 }
@@ -448,7 +448,7 @@ fn delete_folder_by_name(app: AppHandle, folder_name: String) -> Result<(), Stri
     // is_dir rather than exists: this stops remove_dir_all being aimed at a
     // stray file named notes/<folder_name>.
     if !dir.is_dir() {
-        return Err("Folder not found".to_string());
+        return Err("This folder no longer exists".to_string());
     }
 
     fs::remove_dir_all(&dir)

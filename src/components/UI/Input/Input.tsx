@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useId, useMemo } from 'react';
 import { IInputProps, InputRoundedType, InputSizeType } from './types';
 
 const Input: FC<IInputProps> = ({
@@ -11,9 +11,13 @@ const Input: FC<IInputProps> = ({
   iconPosition = 'right',
   error,
   isDirty,
+  fieldClassName = '',
+  errorClassName = '',
   className = '',
   ...props
 }) => {
+  const errorId = useId();
+
   const inputSize = useMemo(() => {
     if (icon) {
       const iconSizeMapping: Record<InputSizeType, string> = {
@@ -56,21 +60,25 @@ const Input: FC<IInputProps> = ({
     return 'border-border-color hover:border-border-strong focus:border-primary';
   }, [error]);
 
+  // The error sits in the layout flow, so callers don't have to reserve space under the field for it.
   return (
-    <div className={`w-full flex items-center relative ${wrapperClassName}`}>
+    <div className={`w-full flex flex-col gap-1 ${wrapperClassName}`}>
       {/* TODO: Support label */}
-      <input
-        className={`w-full min-w-0 outline-none border bg-surface text-text-color placeholder:text-muted-text/70 transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${inputBorderColor} ${inputSize} ${inputRounded} ${className}`}
-        aria-invalid={error ? true : undefined}
-        {...props}
-      />
-      {icon && (
-        <div className={`absolute top-1/2 -translate-y-1/2 flex items-center text-muted-text ${iconPosition === 'left' ? 'left-2' : 'right-2'}`}>
-          {icon}
-        </div>
-      )}
+      <div className={`w-full flex items-center relative ${fieldClassName}`}>
+        <input
+          className={`w-full min-w-0 outline-none border bg-surface text-text-color placeholder:text-muted-text/70 transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${inputBorderColor} ${inputSize} ${inputRounded} ${className}`}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
+          {...props}
+        />
+        {icon && (
+          <div className={`absolute top-1/2 -translate-y-1/2 flex items-center text-muted-text ${iconPosition === 'left' ? 'left-2' : 'right-2'}`}>
+            {icon}
+          </div>
+        )}
+      </div>
       {error && (
-        <p className="text-danger text-xs absolute top-full mt-1">{error}</p>
+        <p id={errorId} className={`text-danger text-xs break-words ${errorClassName}`}>{error}</p>
       )}
     </div>
   );

@@ -5,6 +5,21 @@
 
 @config "../../../tailwind.config.js";
 
+@theme {
+  --animate-modal-fade-in: modal-fade-in 150ms ease-out;
+  --animate-modal-rise-in: modal-rise-in 180ms ease-out;
+
+  @keyframes modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes modal-rise-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+}
+
 html, body {
   font-size: 16px;
 }

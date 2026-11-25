@@ -5,6 +5,7 @@ import FilesPanel from './FilesPanel/FilesPanel';
 import EditorMode from '../../Editor/EditorMode';
 import ToolbarButton from '../../UI/ToolbarButton/ToolbarButton';
 import ThemeToggle from './ThemeToggle/ThemeToggle';
+import NotePath from './NotePath/NotePath';
 
 const MainLayout: FC<PropsWithChildren> = ({ children }) => {
   const [areSidePanelsCollapsed, setAreSidePanelsCollapsed] = useState(false);
@@ -14,16 +15,19 @@ const MainLayout: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <div className="flex flex-col h-dvh overflow-hidden">
-      <header className="h-9 shrink-0 border-b border-border-color flex items-center justify-between px-4">
-        <ToolbarButton
-          isActive={areSidePanelsCollapsed}
-          onClick={() => setAreSidePanelsCollapsed((previousValue) => !previousValue)}
-          title={sidePanelsToggleLabel}
-          aria-label={sidePanelsToggleLabel}
-        >
-          {areSidePanelsCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-        </ToolbarButton>
-        <div className="flex items-center gap-1">
+      <header className="h-9 shrink-0 border-b border-border-color flex items-center justify-between gap-4 px-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <ToolbarButton
+            isActive={areSidePanelsCollapsed}
+            onClick={() => setAreSidePanelsCollapsed((previousValue) => !previousValue)}
+            title={sidePanelsToggleLabel}
+            aria-label={sidePanelsToggleLabel}
+          >
+            {areSidePanelsCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+          </ToolbarButton>
+          <NotePath />
+        </div>
+        <div className="flex shrink-0 items-center gap-1">
           <EditorMode />
           <ThemeToggle />
         </div>

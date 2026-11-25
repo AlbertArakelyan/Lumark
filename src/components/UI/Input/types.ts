@@ -6,6 +6,8 @@ export type InputIconPositionType = 'left' | 'right';
 
 export interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   wrapperClassName?: string;
+  fieldClassName?: string;
+  errorClassName?: string;
   labelClassName?: string;
   inputElSize?: InputSizeType;
   rounded?: InputRoundedType;
