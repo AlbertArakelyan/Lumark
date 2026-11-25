@@ -68,7 +68,7 @@ const FoldersHeader = () => {
             onChange={handleFolderNameChange}
             onKeyDown={handleFolderNameKeyDown}
           />
-          <div className={`flex items-center gap-0.5 w-full justify-end ${addError ? 'mt-4' : ''}`}>
+          <div className="flex items-center gap-0.5 w-full justify-end">
             <Button
               variant="ghost"
               size="square-icon"

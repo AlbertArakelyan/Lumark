@@ -84,7 +84,7 @@ const FilesSearch = () => {
             onChange={handleFileNameChange}
             onKeyDown={handleFileNameKeyDown}
           />
-          <div className={`flex items-center gap-1.5 w-full justify-end ${addError ? 'mt-4' : ''}`}>
+          <div className="flex items-center gap-1.5 w-full justify-end">
             <Button
               size="sm"
               variant="outline"

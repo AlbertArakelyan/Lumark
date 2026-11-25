@@ -101,7 +101,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
       >
         {isEditingName ? (
           <div
-            className="flex items-center gap-1"
+            className="flex items-start gap-1"
             onClick={(e) => e.stopPropagation()}
           >
             <Input
@@ -132,7 +132,7 @@ const FileItem: FC<IFileItemProps> = ({ file }) => {
         ) : (
           <h3 className={`text-sm font-medium truncate ${isSelected ? 'text-primary' : ''}`} title={file.file_name}>{file.file_name}</h3>
         )}
-        <p className={`text-xs text-muted-text ${renameError ? 'mt-4' : ''}`}>
+        <p className="text-xs text-muted-text">
           {new Date(epoch * 1000).toLocaleDateString()}
         </p>
         {!isEditingName && (

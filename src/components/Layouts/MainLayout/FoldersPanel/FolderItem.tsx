@@ -96,7 +96,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
 
   if (isEditingName) {
     return (
-      <div className={`flex flex-col items-start gap-1 p-1.5 rounded-lg ${renameError ? 'pb-5' : ''}`}>
+      <div className="flex flex-col items-start gap-1 p-1.5 rounded-lg">
         <Input
           autoFocus
           inputElSize="xs"
@@ -106,7 +106,7 @@ const FolderItem: FC<IFolderItemProps> = ({ folder }) => {
           onChange={handleFolderNameChange}
           onKeyDown={handleFolderNameKeyDown}
         />
-        <div className={`flex items-center gap-0.5 w-full justify-end ${renameError ? 'mt-4' : ''}`}>
+        <div className="flex items-center gap-0.5 w-full justify-end">
           <Button
             variant="ghost"
             size="square-icon"
