@@ -85,7 +85,7 @@ const Modal: FC<IModalProps> = ({
 
   return createPortal(
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 ${backdropClassName}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 animate-modal-fade-in motion-reduce:animate-none ${backdropClassName}`}
       onMouseDown={handleBackdropMouseDown}
     >
       <div
@@ -94,7 +94,7 @@ const Modal: FC<IModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`w-full ${modalSize} max-h-[85vh] flex flex-col bg-surface text-text-color border border-border-color rounded-xl outline-none ${className}`}
+        className={`w-full ${modalSize} max-h-[85vh] flex flex-col bg-surface text-text-color border border-border-color rounded-xl outline-none animate-modal-rise-in motion-reduce:animate-none ${className}`}
         {...rest}
       >
         <div className={`shrink-0 flex items-start justify-between gap-4 px-5 pt-4 pb-3 border-b border-border-color ${headerClassName}`}>
