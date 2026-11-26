@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { EditorView, keymap } from '@codemirror/view';
-import { Compartment, EditorState, StateCommand } from '@codemirror/state';
-import { indentLess, indentMore } from '@codemirror/commands';
-import { indentUnit } from '@codemirror/language';
+import { EditorView } from '@codemirror/view';
+import { Compartment, EditorState } from '@codemirror/state';
 import { markdown } from '@codemirror/lang-markdown';
 import { basicSetup } from 'codemirror';
 import remarkGfm from 'remark-gfm';
@@ -22,29 +20,11 @@ import highlightDarkCss from 'highlight.js/styles/github-dark.css?inline';
 import { useAppContext } from '../../contexts/AppProvider.tsx';
 import { EditorModeEnum } from '../../types/editor/editorEnums.ts';
 import { ThemeEnum } from '../../types/theme/themeEnums.ts';
+import { editorKeymap } from './editorKeymaps.ts';
 
 const themeCompartment = new Compartment();
 
 const getEditorTheme = (theme: ThemeEnum) => (theme === ThemeEnum.DARK ? githubDark : githubLight);
-
-// With no selection, Tab inserts an indent unit at the cursor instead of indenting the whole
-// line (CodeMirror's indentMore), so a Tab mid-sentence behaves like a normal text editor.
-const insertIndentOrIndentSelection: StateCommand = ({ state, dispatch }) => {
-  if (state.selection.ranges.some((range) => !range.empty)) {
-    return indentMore({ state, dispatch });
-  }
-
-  dispatch(state.update(state.replaceSelection(state.facet(indentUnit)), {
-    scrollIntoView: true,
-    userEvent: 'input',
-  }));
-
-  return true;
-};
-
-const tabKeymap = keymap.of([
-  { key: 'Tab', run: insertIndentOrIndentSelection, shift: indentLess },
-]);
 
 // Try also react-simple-code-editor [https://www.npmjs.com/package/react-simple-code-editor]
 // inside a new Editor.tsx (Editor2.tsx) component and compare
@@ -65,7 +45,7 @@ const Editor = () => {
           basicSetup,
           EditorView.lineWrapping,
           markdown(),
-          tabKeymap,
+          editorKeymap,
           themeCompartment.of(getEditorTheme(theme)),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {

@@ -66,7 +66,7 @@
 - [x] Linebreaks inside of the editor (togglable or as a deafult behavior)
 - [x] Mode selection (Edit, View, Split)
 - [x] Support Tab and Shift+Tab (for tabbing and back-tabbing)
-- [ ] Support Key Shortcuts (Ctrl+B, Ctrl+I, Ctrl+U, etc.)
+- [x] Support Key Shortcuts (Ctrl+B, Ctrl+I, Ctrl+U, etc.)
 - [x] Multiple files selection
 - [x] Support folders/workspaces
 - [x] Dark mode

@@ -400,4 +400,23 @@ Supported by GitHub and many Markdown renderers.
 
 ---
 
+## Keyboard Shortcuts
+
+Lumark's editor can apply common formatting for you. Formatting shortcuts wrap the selected text, or insert an empty pair with the cursor inside when nothing is selected. Pressing the same shortcut again removes the formatting. On macOS use `Cmd` instead of `Ctrl`.
+
+| Action         | Shortcut           | Result                    |
+| -------------- | ------------------ | ------------------------- |
+| Bold           | `Ctrl+B`           | `**text**`                |
+| Italic         | `Ctrl+I`           | `*text*`                  |
+| Underline      | `Ctrl+U`           | `<u>text</u>`             |
+| Strikethrough  | `Ctrl+Shift+X`     | `~~text~~`                |
+| Inline code    | `Ctrl+E`           | `` `text` ``              |
+| Link           | `Ctrl+K`           | `[text](url)`             |
+| Indent         | `Tab`              | Indents the selected lines |
+| Outdent        | `Shift+Tab`        | Outdents the selected lines |
+
+Pasting a URL over selected text turns it into a link, and pressing `Enter` inside a list continues it.
+
+---
+
 *Built with Markdown. Powered by [![Lumark](https://www.lumark.app/logo.png)](https://www.lumark.app/)*
