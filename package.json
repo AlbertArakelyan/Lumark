@@ -12,8 +12,10 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@codemirror/commands": "6.10.2",
     "@codemirror/highlight": "^0.19.8",
     "@codemirror/lang-markdown": "^6.5.0",
+    "@codemirror/language": "6.12.1",
     "@fsegurai/codemirror-theme-github-dark": "^6.2.3",
     "@fsegurai/codemirror-theme-github-light": "^6.2.3",
     "@tailwindcss/vite": "^4.1.18",
