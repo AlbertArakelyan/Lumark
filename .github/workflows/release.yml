@@ -1,8 +1,10 @@
 name: Release
 
 # Builds the installers and attaches them to the GitHub release:
-#   Lumark_<version>_amd64.deb, Lumark_<version>_x64-setup.exe, Lumark_<version>_x64.dmg
+#   Lumark_<version>_amd64.deb, Lumark_<version>_x64-setup.exe,
+#   Lumark_<version>_x64.dmg (Intel Macs), Lumark_<version>_aarch64.dmg (Apple Silicon Macs)
 # <version> comes from src-tauri/tauri.conf.json, so bump it there before tagging.
+# Both .dmg builds are ad-hoc signed through bundle.macOS.signingIdentity "-" in tauri.conf.json.
 
 on:
   release:
@@ -37,6 +39,10 @@ jobs:
             platform: macos-latest
             rust_target: x86_64-apple-darwin
             args: --target x86_64-apple-darwin --bundles dmg
+          - name: macos-dmg-arm64
+            platform: macos-latest
+            rust_target: aarch64-apple-darwin
+            args: --target aarch64-apple-darwin --bundles dmg
 
     runs-on: ${{ matrix.platform }}
 
